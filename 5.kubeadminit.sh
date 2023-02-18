@@ -1,4 +1,4 @@
-IPADDR="10.156.0.19"
+IPADDR="10.128.0.24"
 NODENAME=$(hostname -s)
 POD_CIDR="192.168.0.0/16"
 

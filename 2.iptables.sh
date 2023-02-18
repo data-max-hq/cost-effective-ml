@@ -1,3 +1,4 @@
+# https://devopscube.com/setup-kubernetes-cluster-kubeadm/
 cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
 overlay
 br_netfilter

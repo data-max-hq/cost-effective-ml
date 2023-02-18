@@ -1,0 +1,1 @@
+kubectl label node kubernetes-demo-node-2  node-role.kubernetes.io/worker=worker
