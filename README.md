@@ -7,7 +7,7 @@ Use k3s for Kubernetes
 3. Add nodes in separate node groups
 4. Install kubeflow pipelines
 5. Run sample tasks in separate node groups (taints and tolerations)
-6. Install Ray and run ray tasks from kubeflow
+6. Install Ray and run ray tasks from Kubeflow
 7. Enable Ray dashboard
 8. Do the same with GPU nodes
 
