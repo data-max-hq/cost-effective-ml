@@ -1,4 +1,4 @@
-sudo apt-get install git -y
+# sudo apt-get install git -y
 
 # https://www.kubeflow.org/docs/components/pipelines/v1/installation/standalone-deployment/
 # https://www.kubeflow.org/docs/components/pipelines/v2/installation/quickstart/
