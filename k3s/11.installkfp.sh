@@ -11,3 +11,6 @@ sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env
 export PIPELINE_VERSION=1.8.5
 kubectl delete -k "github.com/kubeflow/pipelines/manifests/kustomize/env/dev?ref=$PIPELINE_VERSION"
 kubectl delete -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
+
+#
+sudo k3s kubectl port-forward svc/ml-pipeline-ui  -n kubeflow 8080:80 --address='0.0.0.0'

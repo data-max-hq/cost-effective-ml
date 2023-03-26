@@ -4,9 +4,15 @@
 #
 
 # Create instances with tags
-# 4 CPU 16 GB
+# 4 CPU 16 GB 100 GB
 sudo apt-get update -y
 sudo apt-get install git -y
+
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
 
 # Install k3s main
 curl -sfL https://get.k3s.io | sh -
@@ -17,7 +23,7 @@ export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
 # Add agent nodes
 SERVER_IP=10.128.0.29
-K3S_NODE_TOKEN=K10853a6fab88d417f95525b95def3d9838d6310a97294f8bb92344c7d020135da0::server:8fcb59ef2de5160d475fb0cf8440b3d6
+K3S_NODE_TOKEN=
 curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 
 # Dashboard
