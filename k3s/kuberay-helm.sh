@@ -17,4 +17,4 @@ sudo k3s kubectl get pods
 sudo k3s kubectl port-forward --address 0.0.0.0 svc/raycluster-kuberay-head-svc 8265:8265
 
 sudo k3s kubectl exec -it ${RAYCLUSTER_HEAD_POD} -- bash
-sudo k3s python -c "import ray; ray.init(); print(ray.cluster_resources())" # (in Ray head Pod)
+python -c "import ray; ray.init(); print(ray.cluster_resources())" # (in Ray head Pod)
