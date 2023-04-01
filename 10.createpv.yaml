@@ -1,3 +1,0 @@
-sudo mkdir -p /mnt/data
-kubectl apply -p sc.yaml
-kubectl apply -p pv.yaml

@@ -13,6 +13,10 @@ sudo apt-get update
 
 sudo apt-get install apt-transport-https git helm -y
 
+# install customize
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+sudo mv kustomize /bin/
+
 # Install k3s main, only in master
 curl -sfL https://get.k3s.io | sh -
 
@@ -48,3 +52,22 @@ sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env
 
 
 sudo k3s kubectl port-forward svc/ml-pipeline-ui  -n kubeflow 8080:80 --address='0.0.0.0'
+
+##install kubeflow
+git clone https://github.com/kubeflow/manifests.git
+cd manifests/
+while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+
+sudo k3kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:8080 --address='0.0.0.0'
+
+##
+sudo mkdir /etc/rancher/k3s
+sudo vi /etc/rancher/k3s/registries.yaml
+
+# server
+sudo systemctl restart k3s
+# restart agent
+sudo systemctl restart k3s-agent
+
+
+sudo k3s kubectl port-forward svc/demo-cluster-head-svc  8625:8625 --address='0.0.0.0'
