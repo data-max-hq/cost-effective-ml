@@ -60,6 +60,17 @@ while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply
 
 sudo k3kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:8080 --address='0.0.0.0'
 
+# enable unsecure
+# https://github.com/kubeflow/manifests#change-default-user-password
+https://github.com/kubeflow/manifests/pull/2155
+https://github.com/kubeflow/manifests/issues/2225#issuecomment-1157931840
+
+# Change username password
+https://github.com/kubeflow/manifests#change-default-user-password
+
+# delete kubeflow
+kustomize build example | sudo k3s kubectl delete -f -
+
 ##
 sudo mkdir /etc/rancher/k3s
 sudo vi /etc/rancher/k3s/registries.yaml
