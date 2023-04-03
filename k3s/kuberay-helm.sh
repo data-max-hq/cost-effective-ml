@@ -12,7 +12,7 @@ sudo helm upgrade --install \
 sudo helm list --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 # Check the KubeRay operator Pod in `default` namespace
-sudo k3s kubectl get pods --namespace kubeflow-user-example-com
+sudo k3s kubectl get pods
 # NAME                                READY   STATUS    RESTARTS   AGE
 # kuberay-operator-6fcbb94f64-mbfnr   1/1     Running   0          17s
 
