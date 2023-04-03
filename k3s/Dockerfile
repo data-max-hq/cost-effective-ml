@@ -1,4 +1,4 @@
-FROM rayproject/ray:2.3.0-py37
+FROM rayproject/ray:2.3.0-py38
 
 RUN pip install numpy tensorflow
 
