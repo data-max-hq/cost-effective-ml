@@ -82,3 +82,14 @@ sudo systemctl restart k3s-agent
 
 
 sudo k3s kubectl port-forward svc/demo-cluster-head-svc  8625:8625 --address='0.0.0.0'
+
+sudo k3s kubectl exec -it raycluster-kuberay-head-dbx95 -- bash
+## Training file
+# https://docs.ray.io/en/latest/train/examples/tf/tensorflow_mnist_example.html#tensorflow-mnist-example
+
+#echo <<'EOF' >>
+#.
+#.
+#EOF
+
+python3 test.py --num-workers 1 --epochs 50
