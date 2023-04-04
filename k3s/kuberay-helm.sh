@@ -20,15 +20,7 @@ sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm upgrade \
   --install \
   raycluster kuberay/ray-cluster \
   --version 0.4.0 \
-  --set head.rayVersion=2.3.0 \
-  --set image.repository=us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server \
-  --set image.tag=2.3.0-py38 \
-  --set worker.resources.limits.cpu=1 \
-  --set worker.resources.limits.memory=10G \
-  --set worker.resources.requests.cpu=1 \
-  --set worker.resources.requests.memory=10G \
-  --set worker.replicas=2
-
+  --values local.values.yaml
 
 sudo k3s kubectl get pods
 
@@ -42,6 +34,7 @@ sudo helm ls --kubeconfig /etc/rancher/k3s/k3s.yaml
 sudo helm uninstall raycluster --kubeconfig /etc/rancher/k3s/k3s.yaml
 sudo helm uninstall kuberay-operator --kubeconfig /etc/rancher/k3s/k3s.yaml
 
+sudo k3s kubectl ray-cluster.yaml
 
 # ============================
 sudo k3s kubectl exec -it raycluster-kuberay-head-dbx95 -- bash

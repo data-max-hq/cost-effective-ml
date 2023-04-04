@@ -1,0 +1,31 @@
+head:
+  rayVersion: 2.3.0
+
+image:
+  repository: us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server
+  tag: 2.3.0-py38
+
+worker:
+  replicas: 1
+  resources:
+    limits:
+      cpu: "1"
+      memory: "10G"
+    requests:
+      cpu: "1"
+      memory: "10G"
+
+  additionalWorkerGroups:
+    smallGroup:
+      disabled: false
+      replicas: 1
+      minReplicas: 1
+      maxReplicas: 1
+
+      resources:
+        limits:
+          cpu: "1"
+          memory: "10G"
+        requests:
+          cpu: "1"
+          memory: "10G"
