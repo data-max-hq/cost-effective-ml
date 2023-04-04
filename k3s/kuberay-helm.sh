@@ -22,7 +22,11 @@ sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm upgrade \
   --version 0.4.0 \
   --set head.rayVersion=2.3.0 \
   --set image.repository=us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server \
-  --set image.tag=2.3.0-py38
+  --set image.tag=2.3.0-py38 \
+  --set worker.resources.limits.cpu=3 \
+  --set worker.resources.limits.memory=15G \
+  --set worker.resources.requests.cpu=3 \
+  --set worker.resources.requests.memory=15G
 
 
 sudo k3s kubectl get pods
