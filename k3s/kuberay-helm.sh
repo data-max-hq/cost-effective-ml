@@ -23,10 +23,11 @@ sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm upgrade \
   --set head.rayVersion=2.3.0 \
   --set image.repository=us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server \
   --set image.tag=2.3.0-py38 \
-  --set worker.resources.limits.cpu=3 \
-  --set worker.resources.limits.memory=15G \
-  --set worker.resources.requests.cpu=3 \
-  --set worker.resources.requests.memory=15G
+  --set worker.resources.limits.cpu=1 \
+  --set worker.resources.limits.memory=10G \
+  --set worker.resources.requests.cpu=1 \
+  --set worker.resources.requests.memory=10G \
+  --set worker.replicas=2
 
 
 sudo k3s kubectl get pods
@@ -40,3 +41,16 @@ python -c "import ray; ray.init(); print(ray.cluster_resources())" # (in Ray hea
 sudo helm ls --kubeconfig /etc/rancher/k3s/k3s.yaml
 sudo helm uninstall raycluster --kubeconfig /etc/rancher/k3s/k3s.yaml
 sudo helm uninstall kuberay-operator --kubeconfig /etc/rancher/k3s/k3s.yaml
+
+
+# ============================
+sudo k3s kubectl exec -it raycluster-kuberay-head-dbx95 -- bash
+## Training file
+# https://docs.ray.io/en/latest/train/examples/tf/tensorflow_mnist_example.html#tensorflow-mnist-example
+
+#echo <<'EOF' >>
+#.
+#.
+#EOF
+
+python3 test.py --num-workers 1 --epochs 50
