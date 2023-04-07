@@ -82,3 +82,8 @@ sudo systemctl restart k3s-agent
 
 
 sudo k3s kubectl port-forward svc/demo-cluster-head-svc  8625:8625 --address='0.0.0.0'
+
+sudo k3s kubectl get nodes --show-labels
+sudo k3s kubectl label nodes k3s-instance-2 cpu=true
+sudo k3s kubectl label nodes k3s-instance-3 gpu=true
+

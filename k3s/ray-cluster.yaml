@@ -61,7 +61,7 @@ spec:
       replicas: 1
       minReplicas: 1
       maxReplicas: 2
-      groupName: smallgroup
+      groupName: cpugroup
       template:
         spec:
           imagePullSecrets:
@@ -100,7 +100,7 @@ spec:
           tolerations:
             [ ]
           nodeSelector:
-            { }
+            cpu: "true"
         metadata:
           annotations:
             key: value
@@ -111,10 +111,11 @@ spec:
             app.kubernetes.io/managed-by: Helm
     - rayStartParams:
         block: "true"
+        #num-gpus: "1"
       replicas: 1
       minReplicas: 1
-      maxReplicas: 2147483647
-      groupName: workergroup
+      maxReplicas: 3
+      groupName: gpugroup
       template:
         spec:
           imagePullSecrets:
@@ -153,7 +154,7 @@ spec:
           tolerations:
             []
           nodeSelector:
-            {}
+            gpu: "true"
         metadata:
           annotations:
             key: value
