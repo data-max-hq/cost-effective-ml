@@ -13,6 +13,11 @@ from ray.train.tensorflow import TensorflowTrainer
 from ray.air.integrations.keras import Callback as TrainCheckpointReportCallback
 from ray.air.config import ScalingConfig
 
+# ToDo: Similar to https://github.com/rawkintrevo/basis-vectors-for-covid-kf/blob/master/stuff%20in%20notebook.py
+# Create a volume
+# Download data with container op
+# run resource op
+
 
 def mnist_dataset(batch_size: int) -> tf.data.Dataset:
     (x_train, y_train), _ = tf.keras.datasets.mnist.load_data()
