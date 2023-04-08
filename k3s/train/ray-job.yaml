@@ -24,6 +24,9 @@ spec:
         #num-cpus: '2' # can be auto-completed from the limits
       #pod template
       template:
+        metadata:
+          labels:
+            sidecar.istio.io/inject: "false"
         spec:
           containers:
             - name: ray-head
@@ -60,6 +63,9 @@ spec:
         rayStartParams: {}
         #pod template
         template:
+          metadata:
+            labels:
+              sidecar.istio.io/inject: "false"
           spec:
             nodeSelector:
               gpu: "true"

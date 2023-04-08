@@ -1,6 +1,7 @@
 import kfp
 from kfp import dsl
 import kfp.components as components
+from kfp.dsl._resource_op import kubernetes_resource_delete_op
 
 ray_job_manifest = {
   "apiVersion": "ray.io/v1alpha1",
@@ -16,7 +17,11 @@ ray_job_manifest = {
           "dashboard-host": "0.0.0.0"
         },
         "template": {
-          "metadata": {},
+          "metadata": {
+            "labels": {
+              "sidecar.istio.io/inject": "false"
+            }
+          },
           "spec": {
             "containers": [
               {
@@ -60,7 +65,11 @@ ray_job_manifest = {
           "replicas": 1,
           "scaleStrategy": {},
           "template": {
-            "metadata": {},
+            "metadata": {
+              "labels": {
+                "sidecar.istio.io/inject": "false"
+              }
+            },
             "spec": {
               "containers": [
                 {
@@ -141,19 +150,29 @@ def echo_msg(msg: str):
 )
 def ray_job_pipeline():
     exit_task = echo_msg("Exit!")
+    exit_task.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
     with dsl.ExitHandler(exit_task):
         # download_task = gcs_download_op(url)
         echo_task = echo_op()
+        echo_task.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
         rop = kfp.dsl.ResourceOp(
             name="start-kfp-task",
             k8s_resource=ray_job_manifest,
-            action="create",
-            success_condition="status.jobStatus == SUCCEEDED"
-        ).after(echo_task)
+            action="apply",
+            success_condition="status.jobStatus == SUCCEEDED",
+        ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(echo_task)
 
-        rop.set_caching_options(enable_caching=False)
-        # afterwards delete using kubernetes_resource_delete_op
+        # rop.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
+        rop_delete = kubernetes_resource_delete_op(
+          name="rayjob-sample",
+          kind="RayJob"
+        ).after(rop)
+        rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
+        # rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
 if __name__ == '__main__':
