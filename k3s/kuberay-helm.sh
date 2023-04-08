@@ -6,7 +6,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 #sudo helm install kuberay-operator kuberay/kuberay-operator --version 0.4.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
 sudo helm upgrade --install \
   kuberay-operator kuberay/kuberay-operator \
-  --version 0.4.0 \
+  --version 0.5.0 \
   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 sudo helm list --kubeconfig /etc/rancher/k3s/k3s.yaml
@@ -16,11 +16,17 @@ sudo k3s kubectl get pods
 # NAME                                READY   STATUS    RESTARTS   AGE
 # kuberay-operator-6fcbb94f64-mbfnr   1/1     Running   0          17s
 
-sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm upgrade \
-  --install \
-  raycluster kuberay/ray-cluster \
-  --version 0.4.0 \
-  --values local.values.yaml
+#sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm upgrade \
+#  --install \
+#  raycluster kuberay/ray-cluster \
+#  --version 0.5.0 \
+#  --values local.values.yaml
+
+sudo k3s kubectl apply -f jobray.yaml
+sudo k3s kubectl get po
+sudo k3s kubectl describe rayjobs rayjob-sample
+
+sudo k3s kubectl port-forward --address 0.0.0.0 svc/$(sudo k3s kubectl get svc | grep head | awk '{print $1}') 8265:8265
 
 sudo k3s kubectl get pods
 

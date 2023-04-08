@@ -17,8 +17,18 @@ sudo apt-get install apt-transport-https git helm -y
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 sudo mv kustomize /bin/
 
+## Prepare registries
+sudo mkdir -p /etc/rancher/k3s
+sudo vi /etc/rancher/k3s/registries.yaml
+
+# server
+sudo systemctl restart k3s
+# restart agent
+sudo systemctl restart k3s-agent
+
 # Install k3s main, only in master
 curl -sfL https://get.k3s.io | sh -
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
 # Get node token
 #sudo cat /var/lib/rancher/k3s/server/node-token
@@ -26,8 +36,8 @@ export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
 # Add agent nodes
 SERVER_IP=10.128.0.35
-K3S_NODE_TOKEN=
-curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
+K3S_NODE_TOKEN=K10b928c6d006127123beeea03efff679836953f4a3c707bb2b23ac09ad70c0ca30::server:5bbab38a5abe214d420fee2e6ae7e2c8
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 
 # Dashboard
 # https://docs.k3s.io/installation/kube-dashboard
@@ -43,6 +53,13 @@ sudo k3s kubectl create -f user.yaml -f role.yaml
 sudo k3s kubectl -n kubernetes-dashboard create token admin-user
 
 sudo k3s kubectl port-forward svc/kubernetes-dashboard  -n kubernetes-dashboard 8443:443 --address='0.0.0.0'
+
+## Add node labels
+sudo k3s kubectl get nodes --show-labels
+sudo k3s kubectl label nodes k3s-instance-2 cpu=true
+sudo k3s kubectl label nodes k3s-instance-3 gpu=true
+
+## install kuberay operator
 
 # Kubeflow UI
 export PIPELINE_VERSION=1.8.5
@@ -71,19 +88,6 @@ https://github.com/kubeflow/manifests#change-default-user-password
 # delete kubeflow
 kustomize build example | sudo k3s kubectl delete -f -
 
-##
-sudo mkdir /etc/rancher/k3s
-sudo vi /etc/rancher/k3s/registries.yaml
-
-# server
-sudo systemctl restart k3s
-# restart agent
-sudo systemctl restart k3s-agent
-
 
 sudo k3s kubectl port-forward svc/demo-cluster-head-svc  8625:8625 --address='0.0.0.0'
-
-sudo k3s kubectl get nodes --show-labels
-sudo k3s kubectl label nodes k3s-instance-2 cpu=true
-sudo k3s kubectl label nodes k3s-instance-3 gpu=true
 

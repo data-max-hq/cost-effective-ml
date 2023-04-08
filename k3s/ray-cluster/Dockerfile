@@ -1,8 +1,11 @@
 FROM rayproject/ray:2.3.0-py38
 
-RUN pip install numpy tensorflow
+COPY mnist-tf.py mmist-tf.py
+COPY sample_code.py sample_code.py
 
-CMD ["bin/bash"]
+# RUN pip install numpy tensorflow
+
+# CMD ["bin/bash"]1
 
 #FROM rayproject/ray:2.3.0-py38-gpu
 #
