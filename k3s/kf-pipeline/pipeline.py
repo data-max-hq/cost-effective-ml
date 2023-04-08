@@ -163,7 +163,7 @@ def ray_job_pipeline():
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
         ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(echo_task)
-
+        rop.enable_caching = False
         # rop.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
         rop_delete = kubernetes_resource_delete_op(
@@ -171,8 +171,6 @@ def ray_job_pipeline():
           kind="RayJob"
         ).after(rop)
         rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
-
-        # rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
 if __name__ == '__main__':
