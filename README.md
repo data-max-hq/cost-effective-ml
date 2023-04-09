@@ -16,4 +16,6 @@ Use k3s for Kubernetes
 * https://github.com/ray-project/kuberay
 * https://docs.ray.io/en/latest/cluster/kubernetes/examples/gpu-training-example.html#kuberay-gpu-training-example
 * https://ray-project.github.io/kuberay/deploy/helm/
-* 
+
+
+Made with ❤️ by [Data-Max.io](https://www.data-max.io/).
