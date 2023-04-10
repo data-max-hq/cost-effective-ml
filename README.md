@@ -1,5 +1,8 @@
-# cost-effective-ml
+# Cost Effective ML
 Building a Hybrid Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
+
+## Building the hybrid Kubernetes Cluster
+![1-setup.png](diagrams/images/1-setup.png)
 
 ## ToDo:
 1. Create two nodes and add them in cluster
