@@ -1,5 +1,5 @@
-# cost-efficient-ml
-Use k3s for Kubernetes
+# cost-effective-ml
+Building a Hybrid Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
 
 ## ToDo:
 1. Create two nodes and add them in cluster
@@ -10,6 +10,9 @@ Use k3s for Kubernetes
 6. Install Ray and run ray tasks from Kubeflow
 7. Enable Ray dashboard
 8. Do the same with GPU nodes
+
+## Troubleshooting
+
 
 ## Links 
 * https://cloud.google.com/blog/products/ai-machine-learning/build-a-ml-platform-with-kubeflow-and-ray-on-gke
