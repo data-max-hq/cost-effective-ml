@@ -14,7 +14,16 @@ Building a Hybrid Kubernetes Cluster for Scalable and Cost-Effective ML Training
 7. Enable Ray dashboard
 8. Do the same with GPU nodes
 
+## Prerequisites
+These tools must be installed in the nodes before starting:
+* Git
+* Helm3
+* Kustomize
+
 ## Troubleshooting
+* Configure private registries in k3s: https://docs.k3s.io/installation/private-registry
+  * https://breadnet.co.uk/using-google-artifact-registry-with-k3s/
+* Restart k3s and k3s-agent: https://docs.k3s.io/upgrades/manual#restarting-k3s
 
 
 ## Links 
