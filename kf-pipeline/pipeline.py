@@ -11,6 +11,7 @@ ray_job_manifest = {
   },
   "spec": {
     "entrypoint": "python3 sample_code.py",
+    "shutdownAfterJobFinishes": "true",
     "rayClusterSpec": {
       "headGroupSpec": {
         "rayStartParams": {

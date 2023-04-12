@@ -14,6 +14,7 @@ spec:
   #    }
   #}'
   runtimeEnv: ewogICAgInBpcCI6IFsKICAgICAgICAicmVxdWVzdHM9PTIuMjYuMCIsCiAgICAgICAgInBlbmR1bHVtPT0yLjEuMiIKICAgIF0sCiAgICAiZW52X3ZhcnMiOiB7ImNvdW50ZXJfbmFtZSI6ICJ0ZXN0X2NvdW50ZXIifQp9Cg==
+  shutdownAfterJobFinishes: true
   rayClusterSpec:
     rayVersion: '2.3.0' # should match the Ray version in the image of the containers
     # Ray head pod template
