@@ -1,7 +1,6 @@
 import kfp
 from kfp import dsl
 import kfp.components as components
-from kfp.dsl._resource_op import kubernetes_resource_delete_op
 
 
 def read_rayjob(file_name):
@@ -24,7 +23,7 @@ def echo_msg(msg: str):
 
 @dsl.pipeline(
     name="rayjob-pipeline",
-    description='A hello world RayJob pipeline.'
+    description="A hello world RayJob pipeline."
 )
 def ray_job_pipeline():
     exit_task = echo_msg("Exit!")
@@ -37,7 +36,7 @@ def ray_job_pipeline():
         ray_job_manifest_gpu = read_rayjob("gpurayjob.json")
 
         rop_gpu = kfp.dsl.ResourceOp(
-            name="start-kfp-task",
+            name="ray-job-gpu",
             k8s_resource=ray_job_manifest_gpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
@@ -47,18 +46,12 @@ def ray_job_pipeline():
 
         ray_job_manifest_cpu = read_rayjob("cpurayjob.json")
         rop_cpu = kfp.dsl.ResourceOp(
-            name="start-kfp-task",
+            name="ray-job-cpu",
             k8s_resource=ray_job_manifest_cpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
-        ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(rop_gpu)
+        ).add_node_selector_constraint(label_name="cpu", value="true").set_caching_options(False).after(rop_gpu)
         rop_cpu.enable_caching = False
-
-        rop_delete = kubernetes_resource_delete_op(
-            name="rayjob-sample",
-            kind="RayJob"
-        ).after(rop_cpu)
-        rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
 if __name__ == "__main__":

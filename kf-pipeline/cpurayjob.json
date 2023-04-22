@@ -6,7 +6,7 @@
   },
   "spec": {
     "entrypoint": "python3 sample_code.py",
-    "shutdownAfterJobFinishes": "true",
+    "shutdownAfterJobFinishes": true,
     "rayClusterSpec": {
       "headGroupSpec": {
         "rayStartParams": {

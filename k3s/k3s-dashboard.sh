@@ -1,3 +1,5 @@
+#!/bin/bash
+bash -c 'cat << EOF > dashboard-user.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -16,3 +18,4 @@ subjects:
 - kind: ServiceAccount
   name: admin-user
   namespace: kubernetes-dashboard
+EOF'

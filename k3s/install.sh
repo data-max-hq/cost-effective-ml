@@ -27,16 +27,16 @@ sudo systemctl restart k3s
 sudo systemctl restart k3s-agent
 
 # Install k3s main, only in master
-curl -sfL https://get.k3s.io | sh -
+# curl -sfL https://get.k3s.io | sh -
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
 # Get node token
-#sudo cat /var/lib/rancher/k3s/server/node-token
+# sudo cat /var/lib/rancher/k3s/server/node-token
 export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
 # Add agent nodes
-SERVER_IP=10.128.0.35
-K3S_NODE_TOKEN=K10b928c6d006127123beeea03efff679836953f4a3c707bb2b23ac09ad70c0ca30::server:5bbab38a5abe214d420fee2e6ae7e2c8
+SERVER_IP=10.128.0.42
+K3S_NODE_TOKEN=K10501d5561d5c33fa882d1c3e3c100cd8067926cfee297a239889e723dcd74f160::server:50d619978a2f5138ee29547fac864563
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 
 # Dashboard
