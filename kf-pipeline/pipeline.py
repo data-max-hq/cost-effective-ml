@@ -1,6 +1,7 @@
 import kfp
 from kfp import dsl
 import kfp.components as components
+from kfp.dsl._resource_op import kubernetes_resource_delete_op
 
 
 def read_rayjob(file_name):
@@ -28,6 +29,7 @@ def echo_msg(msg: str):
 def ray_job_pipeline():
     exit_task = echo_msg("Exit!")
     exit_task.execution_options.caching_strategy.max_cache_staleness = "P0D"
+    number = 3
 
     with dsl.ExitHandler(exit_task):
         # download_task = gcs_download_op(url)
@@ -36,7 +38,7 @@ def ray_job_pipeline():
 
         ray_job_manifest_cpu = read_rayjob("cpurayjob.json")
         rop_cpu = kfp.dsl.ResourceOp(
-            name="ray-job-cpu",
+            name=f"ray-job-cpu-{number}",
             k8s_resource=ray_job_manifest_cpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
@@ -45,14 +47,26 @@ def ray_job_pipeline():
 
         ray_job_manifest_gpu = read_rayjob("gpurayjob.json")
         rop_gpu = kfp.dsl.ResourceOp(
-            name="ray-job-gpu",
+            name=f"ray-job-gpu-{number}",
             k8s_resource=ray_job_manifest_gpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
             failure_condition="status.jobStatus == FAILED",
-        ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(rop_cpu)
+        ).set_caching_options(False).after(rop_cpu)
         rop_gpu.enable_caching = False
-        # rop.execution_options.caching_strategy.max_cache_staleness = "P0D"
+        # rop_gpu.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
+        rop_cpu_delete = kubernetes_resource_delete_op(
+          name="rayjob-cpu",
+          kind="RayJob"
+        ).after(rop_gpu)
+        rop_cpu_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
+
+        rop_gpu_delete = kubernetes_resource_delete_op(
+            name="rayjob-gpu",
+            kind="RayJob"
+        ).after(rop_cpu_delete)
+        rop_gpu_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
 if __name__ == "__main__":

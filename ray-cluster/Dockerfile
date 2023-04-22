@@ -1,6 +1,6 @@
 FROM rayproject/ray:2.3.0-py38
 
-COPY mnist-tf.py mmist-tf.py
+COPY mnist-tf.py mnist-tf.py
 COPY sample_code.py sample_code.py
 
 RUN pip install numpy tensorflow
