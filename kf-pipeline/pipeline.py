@@ -1,4 +1,5 @@
 import kfp
+import time
 from kfp import dsl
 import kfp.components as components
 from kfp.dsl._resource_op import kubernetes_resource_delete_op
@@ -29,7 +30,7 @@ def echo_msg(msg: str):
 def ray_job_pipeline():
     exit_task = echo_msg("Exit!")
     exit_task.execution_options.caching_strategy.max_cache_staleness = "P0D"
-    number = 3
+    number = int(time.time())
 
     with dsl.ExitHandler(exit_task):
         # download_task = gcs_download_op(url)
@@ -42,6 +43,7 @@ def ray_job_pipeline():
             k8s_resource=ray_job_manifest_cpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
+            failure_condition="status.jobStatus == FAILED",
         ).add_node_selector_constraint(label_name="cpu", value="true").set_caching_options(False).after(echo_task)
         rop_cpu.enable_caching = False
 

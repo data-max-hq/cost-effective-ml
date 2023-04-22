@@ -6,7 +6,7 @@
     "name": "rayjob-gpu"
   },
   "spec": {
-    "entrypoint": "python3 mnist-tf.py --num-workers 2 --use-gpu False --epochs 50",
+    "entrypoint": "python3 mnist-tf.py --num-workers 2 --use-gpu False --epochs 10",
     "shutdownAfterJobFinishes": true,
     "rayClusterSpec": {
       "headGroupSpec": {
@@ -22,7 +22,7 @@
           "spec": {
             "containers": [
               {
-                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
+                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
                 "name": "ray-head",
                 "ports": [
                   {
@@ -79,7 +79,7 @@
             "spec": {
               "containers": [
                 {
-                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
+                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
                   "lifecycle": {
                     "preStop": {
                       "exec": {
