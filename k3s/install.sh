@@ -89,6 +89,4 @@ https://github.com/kubeflow/manifests#change-default-user-password
 # delete kubeflow
 kustomize build example | sudo k3s kubectl delete -f -
 
-
 sudo k3s kubectl port-forward svc/demo-cluster-head-svc  8625:8625 --address='0.0.0.0'
-

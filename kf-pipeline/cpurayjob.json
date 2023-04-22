@@ -2,7 +2,7 @@
   "apiVersion": "ray.io/v1alpha1",
   "kind": "RayJob",
   "metadata": {
-    "name": "rayjob-sample"
+    "name": "rayjob-cpu"
   },
   "spec": {
     "entrypoint": "python3 sample_code.py",
@@ -21,7 +21,7 @@
           "spec": {
             "containers": [
               {
-                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
                 "name": "ray-head",
                 "ports": [
                   {
@@ -69,7 +69,7 @@
             "spec": {
               "containers": [
                 {
-                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
                   "lifecycle": {
                     "preStop": {
                       "exec": {
