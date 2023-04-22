@@ -3,135 +3,142 @@ from kfp import dsl
 import kfp.components as components
 from kfp.dsl._resource_op import kubernetes_resource_delete_op
 
-ray_job_manifest = {
-  "apiVersion": "ray.io/v1alpha1",
-  "kind": "RayJob",
-  "metadata": {
-    "name": "rayjob-sample",
-  },
-  "spec": {
-    "entrypoint": "python3 sample_code.py",
-    "shutdownAfterJobFinishes": "true",
-    "rayClusterSpec": {
-      "headGroupSpec": {
-        "rayStartParams": {
-          "dashboard-host": "0.0.0.0"
-        },
-        "template": {
-          "metadata": {
-            "labels": {
-              "sidecar.istio.io/inject": "false"
-            }
-          },
-          "spec": {
-            "containers": [
-              {
-                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
-                "name": "ray-head",
-                "ports": [
-                  {
-                    "containerPort": 6379,
-                    "name": "gcs-server",
-                    "protocol": "TCP"
-                  },
-                  {
-                    "containerPort": 8265,
-                    "name": "dashboard",
-                    "protocol": "TCP"
-                  },
-                  {
-                    "containerPort": 10001,
-                    "name": "client",
-                    "protocol": "TCP"
-                  },
-                  {
-                    "containerPort": 8000,
-                    "name": "serve",
-                    "protocol": "TCP"
-                  }
-                ],
-                "resources": {}
-              }
-            ]
-          }
-        }
-      },
-      "rayVersion": "2.3.0",
-      "workerGroupSpecs": [
-        {
-          "groupName": "small-group",
-          "maxReplicas": 2,
-          "minReplicas": 1,
-          "rayStartParams": {},
-          "replicas": 1,
-          "scaleStrategy": {},
-          "template": {
-            "metadata": {
-              "labels": {
-                "sidecar.istio.io/inject": "false"
-              }
-            },
-            "spec": {
-              "containers": [
-                {
-                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
-                  "lifecycle": {
-                    "preStop": {
-                      "exec": {
-                        "command": [
-                          "/bin/sh",
-                          "-c",
-                          "ray stop"
-                        ]
-                      }
-                    }
-                  },
-                  "name": "ray-worker",
-                  "resources": {}
-                }
-              ],
-              "nodeSelector": {
-                "gpu": "true"
-              }
-            }
-          }
-        }
-      ]
-    },
-    "runtimeEnv": "ewogICAgInBpcCI6IFsKICAgICAgICAicmVxdWVzdHM9PTIuMjYuMCIsCiAgICAgICAgInBlbmR1bHVtPT0yLjEuMiIKICAgIF0sCiAgICAiZW52X3ZhcnMiOiB7ImNvdW50ZXJfbmFtZSI6ICJ0ZXN0X2NvdW50ZXIifQp9Cg=="
-  },
-  # "status": {
-  #   "dashboardURL": "rayjob-sample-raycluster-r92h2-head-svc.default.svc.cluster.local:8265",
-  #   "endTime": "2023-04-08T16:49:19Z",
-  #   "jobDeploymentStatus": "Running",
-  #   "jobId": "rayjob-sample-mw4zg",
-  #   "jobStatus": "SUCCEEDED",
-  #   "message": "Job finished successfully.",
-  #   "observedGeneration": 2,
-  #   "rayClusterName": "rayjob-sample-raycluster-r92h2",
-  #   "rayClusterStatus": {
-  #     "availableWorkerReplicas": 1,
-  #     "desiredWorkerReplicas": 1,
-  #     "endpoints": {
-  #       "client": "10001",
-  #       "dashboard": "8265",
-  #       "gcs-server": "6379",
-  #       "metrics": "8080",
-  #       "serve": "8000"
-  #     },
-  #     "head": {
-  #       "podIP": "10.42.2.9",
-  #       "serviceIP": "10.43.42.228"
-  #     },
-  #     "lastUpdateTime": "2023-04-08T16:49:04Z",
-  #     "maxWorkerReplicas": 2,
-  #     "minWorkerReplicas": 1,
-  #     "observedGeneration": 1,
-  #     "state": "ready"
-  #   },
-  #   "startTime": "2023-04-08T16:49:07Z"
-  # }
-}
+# ray_job_manifest = {
+#     "apiVersion": "ray.io/v1alpha1",
+#     "kind": "RayJob",
+#     "metadata": {
+#         "name": "rayjob-sample",
+#     },
+#     "spec": {
+#         "entrypoint": "python3 sample_code.py",
+#         "shutdownAfterJobFinishes": "true",
+#         "rayClusterSpec": {
+#             "headGroupSpec": {
+#                 "rayStartParams": {
+#                     "dashboard-host": "0.0.0.0"
+#                 },
+#                 "template": {
+#                     "metadata": {
+#                         "labels": {
+#                             "sidecar.istio.io/inject": "false"
+#                         }
+#                     },
+#                     "spec": {
+#                         "containers": [
+#                             {
+#                                 "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+#                                 "name": "ray-head",
+#                                 "ports": [
+#                                     {
+#                                         "containerPort": 6379,
+#                                         "name": "gcs-server",
+#                                         "protocol": "TCP"
+#                                     },
+#                                     {
+#                                         "containerPort": 8265,
+#                                         "name": "dashboard",
+#                                         "protocol": "TCP"
+#                                     },
+#                                     {
+#                                         "containerPort": 10001,
+#                                         "name": "client",
+#                                         "protocol": "TCP"
+#                                     },
+#                                     {
+#                                         "containerPort": 8000,
+#                                         "name": "serve",
+#                                         "protocol": "TCP"
+#                                     }
+#                                 ],
+#                                 "resources": {}
+#                             }
+#                         ]
+#                     }
+#                 }
+#             },
+#             "rayVersion": "2.3.0",
+#             "workerGroupSpecs": [
+#                 {
+#                     "groupName": "small-group",
+#                     "maxReplicas": 2,
+#                     "minReplicas": 1,
+#                     "rayStartParams": {},
+#                     "replicas": 1,
+#                     "scaleStrategy": {},
+#                     "template": {
+#                         "metadata": {
+#                             "labels": {
+#                                 "sidecar.istio.io/inject": "false"
+#                             }
+#                         },
+#                         "spec": {
+#                             "containers": [
+#                                 {
+#                                     "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+#                                     "lifecycle": {
+#                                         "preStop": {
+#                                             "exec": {
+#                                                 "command": [
+#                                                     "/bin/sh",
+#                                                     "-c",
+#                                                     "ray stop"
+#                                                 ]
+#                                             }
+#                                         }
+#                                     },
+#                                     "name": "ray-worker",
+#                                     "resources": {}
+#                                 }
+#                             ],
+#                             "nodeSelector": {
+#                                 "gpu": "true"
+#                             }
+#                         }
+#                     }
+#                 }
+#             ]
+#         },
+#         "runtimeEnv": "ewogICAgInBpcCI6IFsKICAgICAgICAicmVxdWVzdHM9PTIuMjYuMCIsCiAgICAgICAgInBlbmR1bHVtPT0yLjEuMiIKICAgIF0sCiAgICAiZW52X3ZhcnMiOiB7ImNvdW50ZXJfbmFtZSI6ICJ0ZXN0X2NvdW50ZXIifQp9Cg=="
+#     },
+#     # "status": {
+#     #   "dashboardURL": "rayjob-sample-raycluster-r92h2-head-svc.default.svc.cluster.local:8265",
+#     #   "endTime": "2023-04-08T16:49:19Z",
+#     #   "jobDeploymentStatus": "Running",
+#     #   "jobId": "rayjob-sample-mw4zg",
+#     #   "jobStatus": "SUCCEEDED",
+#     #   "message": "Job finished successfully.",
+#     #   "observedGeneration": 2,
+#     #   "rayClusterName": "rayjob-sample-raycluster-r92h2",
+#     #   "rayClusterStatus": {
+#     #     "availableWorkerReplicas": 1,
+#     #     "desiredWorkerReplicas": 1,
+#     #     "endpoints": {
+#     #       "client": "10001",
+#     #       "dashboard": "8265",
+#     #       "gcs-server": "6379",
+#     #       "metrics": "8080",
+#     #       "serve": "8000"
+#     #     },
+#     #     "head": {
+#     #       "podIP": "10.42.2.9",
+#     #       "serviceIP": "10.43.42.228"
+#     #     },
+#     #     "lastUpdateTime": "2023-04-08T16:49:04Z",
+#     #     "maxWorkerReplicas": 2,
+#     #     "minWorkerReplicas": 1,
+#     #     "observedGeneration": 1,
+#     #     "state": "ready"
+#     #   },
+#     #   "startTime": "2023-04-08T16:49:07Z"
+#     # }
+# }
+
+
+def read_rayjob(file_name):
+    import json
+    with open(file_name, "r") as input_file:
+        data = json.load(input_file)
+    return data
 
 
 @components.create_component_from_func
@@ -157,22 +164,32 @@ def ray_job_pipeline():
         # download_task = gcs_download_op(url)
         echo_task = echo_op()
         echo_task.execution_options.caching_strategy.max_cache_staleness = "P0D"
+        ray_job_manifest_gpu = read_rayjob("gpurayjob.json")
 
-        rop = kfp.dsl.ResourceOp(
+        rop_gpu = kfp.dsl.ResourceOp(
             name="start-kfp-task",
-            k8s_resource=ray_job_manifest,
+            k8s_resource=ray_job_manifest_gpu,
             action="apply",
             success_condition="status.jobStatus == SUCCEEDED",
         ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(echo_task)
-        rop.enable_caching = False
+        rop_gpu.enable_caching = False
         # rop.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
+        ray_job_manifest_cpu = read_rayjob("cpurayjob.json")
+        rop_cpu = kfp.dsl.ResourceOp(
+            name="start-kfp-task",
+            k8s_resource=ray_job_manifest_cpu,
+            action="apply",
+            success_condition="status.jobStatus == SUCCEEDED",
+        ).add_node_selector_constraint(label_name="gpu", value="true").set_caching_options(False).after(rop_gpu)
+        rop_cpu.enable_caching = False
+
         rop_delete = kubernetes_resource_delete_op(
-          name="rayjob-sample",
-          kind="RayJob"
-        ).after(rop)
+            name="rayjob-sample",
+            kind="RayJob"
+        ).after(rop_cpu)
         rop_delete.execution_options.caching_strategy.max_cache_staleness = "P0D"
 
 
-if __name__ == '__main__':
-    kfp.compiler.Compiler().compile(ray_job_pipeline, __file__ + '.yaml')
+if __name__ == "__main__":
+    kfp.compiler.Compiler().compile(ray_job_pipeline, __file__ + ".yaml")

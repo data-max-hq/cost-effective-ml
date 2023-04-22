@@ -1,0 +1,99 @@
+
+{
+  "apiVersion": "ray.io/v1alpha1",
+  "kind": "RayJob",
+  "metadata": {
+    "name": "rayjob-sample"
+  },
+  "spec": {
+    "entrypoint": "python3 sample_code.py",
+    "shutdownAfterJobFinishes": "true",
+    "rayClusterSpec": {
+      "headGroupSpec": {
+        "rayStartParams": {
+          "dashboard-host": "0.0.0.0"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "sidecar.istio.io/inject": "false"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+                "name": "ray-head",
+                "ports": [
+                  {
+                    "containerPort": 6379,
+                    "name": "gcs-server",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 8265,
+                    "name": "dashboard",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 10001,
+                    "name": "client",
+                    "protocol": "TCP"
+                  },
+                  {
+                    "containerPort": 8000,
+                    "name": "serve",
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {}
+              }
+            ]
+          }
+        }
+      },
+      "rayVersion": "2.3.0",
+      "workerGroupSpecs": [
+        {
+          "groupName": "small-group",
+          "maxReplicas": 2,
+          "minReplicas": 1,
+          "rayStartParams": {},
+          "replicas": 1,
+          "scaleStrategy": {},
+          "template": {
+            "metadata": {
+              "labels": {
+                "sidecar.istio.io/inject": "false"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-2",
+                  "lifecycle": {
+                    "preStop": {
+                      "exec": {
+                        "command": [
+                          "/bin/sh",
+                          "-c",
+                          "ray stop"
+                        ]
+                      }
+                    }
+                  },
+                  "name": "ray-worker",
+                  "resources": {}
+                }
+              ],
+              "nodeSelector": {
+                "gpu": "true"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "runtimeEnv": "ewogICAgInBpcCI6IFsKICAgICAgICAicmVxdWVzdHM9PTIuMjYuMCIsCiAgICAgICAgInBlbmR1bHVtPT0yLjEuMiIKICAgIF0sCiAgICAiZW52X3ZhcnMiOiB7ImNvdW50ZXJfbmFtZSI6ICJ0ZXN0X2NvdW50ZXIifQp9Cg=="
+  }
+}
