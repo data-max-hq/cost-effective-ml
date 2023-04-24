@@ -6,7 +6,7 @@
     "name": "rayjob-gpu"
   },
   "spec": {
-    "entrypoint": "python3 mnist-tf.py --num-workers 2 --use-gpu False --epochs 10",
+    "entrypoint": "python3 mnist-tf.py --num-workers 2 --use-gpu --epochs 50",
     "shutdownAfterJobFinishes": true,
     "rayClusterSpec": {
       "headGroupSpec": {
@@ -22,7 +22,7 @@
           "spec": {
             "containers": [
               {
-                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
+                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server-ml:2.3.0-py38-gpu",
                 "name": "ray-head",
                 "ports": [
                   {
@@ -49,11 +49,11 @@
                 "resources": {
                   "limits": {
                     "cpu": "1",
-                    "memory": "2G"
+                    "memory": "10G"
                   },
                   "requests": {
                     "cpu": "1",
-                    "memory": "2G"
+                    "memory": "10G"
                   }
                 }
               }
@@ -79,7 +79,7 @@
             "spec": {
               "containers": [
                 {
-                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
+                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server-ml:2.3.0-py38-gpu",
                   "lifecycle": {
                     "preStop": {
                       "exec": {
@@ -94,16 +94,19 @@
                   "name": "ray-worker",
                   "resources": {
                     "limits": {
-                      "cpu": "2",
-                      "memory": "10G"
+                      "cpu": "3",
+                      "memory": "15G"
                     },
                     "requests": {
-                      "cpu": "2",
-                      "memory": "10G"
+                      "cpu": "3",
+                      "memory": "15G"
                     }
                   }
                 }
-              ]
+              ],
+              "nodeSelector": {
+                "gpu": "true"
+              }
             }
           }
         }

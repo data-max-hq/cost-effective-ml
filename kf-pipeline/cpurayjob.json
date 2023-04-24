@@ -5,7 +5,7 @@
     "name": "rayjob-cpu"
   },
   "spec": {
-    "entrypoint": "python3 sample_code.py",
+    "entrypoint": "python3 mnist-tf.py --num-workers 2 --epochs 50",
     "shutdownAfterJobFinishes": true,
     "rayClusterSpec": {
       "headGroupSpec": {
@@ -21,7 +21,7 @@
           "spec": {
             "containers": [
               {
-                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
+                "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
                 "name": "ray-head",
                 "ports": [
                   {
@@ -55,10 +55,10 @@
       "workerGroupSpecs": [
         {
           "groupName": "small-group",
-          "maxReplicas": 2,
+          "maxReplicas": 3,
           "minReplicas": 1,
           "rayStartParams": {},
-          "replicas": 1,
+          "replicas": 2,
           "scaleStrategy": {},
           "template": {
             "metadata": {
@@ -69,7 +69,7 @@
             "spec": {
               "containers": [
                 {
-                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38",
+                  "image": "us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10",
                   "lifecycle": {
                     "preStop": {
                       "exec": {
@@ -82,7 +82,16 @@
                     }
                   },
                   "name": "ray-worker",
-                  "resources": {}
+                  "resources": {
+                    "limits": {
+                      "cpu": "2",
+                      "memory": "5G"
+                    },
+                    "requests": {
+                      "cpu": "2",
+                      "memory": "5G"
+                    }
+                  }
                 }
               ],
               "nodeSelector": {

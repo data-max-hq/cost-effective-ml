@@ -41,6 +41,14 @@ SERVER_IP=34.31.109.232
 K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.197.1" sh -
 
+SERVER_IP=34.31.109.232
+K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.196.95" sh -
+
+SERVER_IP=34.31.109.232
+K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=35.193.173.186" sh -
+
 # Dashboard
 # https://docs.k3s.io/installation/kube-dashboard
 GITHUB_URL=https://github.com/kubernetes/dashboard/releases
@@ -59,7 +67,9 @@ sudo k3s kubectl port-forward svc/kubernetes-dashboard  -n kubernetes-dashboard 
 ## Add node labels
 sudo k3s kubectl get nodes --show-labels
 sudo k3s kubectl label nodes k3s-instance-2 cpu=true
-sudo k3s kubectl label nodes k3s-instance-3 gpu=true
+sudo k3s kubectl label nodes k3s-instance-3 cpu=true
+sudo k3s kubectl label nodes k3s-instance-4 gpu=true
+sudo k3s kubectl label nodes k3s-instance-5 gpu=true
 
 ## install kuberay operator
 

@@ -19,3 +19,5 @@ subjects:
   name: admin-user
   namespace: kubernetes-dashboard
 EOF'
+
+sudo k3s kubectl apply -f dashboard-user.yaml

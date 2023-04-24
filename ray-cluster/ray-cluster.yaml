@@ -3,11 +3,8 @@ kind: RayCluster
 metadata:
   labels:
     app.kubernetes.io/name: kuberay
-    helm.sh/chart: ray-cluster-0.4.0
     app.kubernetes.io/instance: raycluster
-    app.kubernetes.io/managed-by: Helm
   name: raycluster-kuberay
-
 spec:
   rayVersion: 2.3.0
   headGroupSpec:
@@ -24,7 +21,7 @@ spec:
             - mountPath: /tmp/ray
               name: log-volume
             name: ray-head
-            image: us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38
+            image: us-central1-docker.pkg.dev/sustained-drake-368613/cost-efficient-ml/ray-server:2.3.0-py38-10
             imagePullPolicy: IfNotPresent
             resources:
               limits:
@@ -106,9 +103,7 @@ spec:
             key: value
           labels:
             app.kubernetes.io/name: kuberay
-            helm.sh/chart: ray-cluster-0.4.0
             app.kubernetes.io/instance: raycluster
-            app.kubernetes.io/managed-by: Helm
     - rayStartParams:
         block: "true"
         #num-gpus: "1"
@@ -160,6 +155,4 @@ spec:
             key: value
           labels:
             app.kubernetes.io/name: kuberay
-            helm.sh/chart: ray-cluster-0.4.0
             app.kubernetes.io/instance: raycluster
-            app.kubernetes.io/managed-by: Helm
