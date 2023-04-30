@@ -29,7 +29,11 @@ sudo systemctl restart k3s-agent
 # Install k3s main, only in master
 # curl -sfL https://get.k3s.io | sh -
 --node-external-ip=34.31.109.232 --flannel-backend=wireguard-native --flannel-external-ip
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--node-external-ip=147.189.197.130 --flannel-backend=wireguard-native --flannel-external-ip" sh -
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--node-external-ip=147.189.199.227 --flannel-backend=wireguard-native --flannel-external-ip --prefer-bundled-bin" sh -
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--prefer-bundled-bin" sh -
+
 
 # Get node token
 # sudo cat /var/lib/rancher/k3s/server/node-token
@@ -37,9 +41,13 @@ export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
 # Add agent nodes
 SERVER_IP=10.128.0.42
-SERVER_IP=147.189.197.130
-K3S_NODE_TOKEN=K10b3d1e168e4e2c2527df60566c348cd5c4c493d8c1fa746b7110e30238962c4e3::server:d3a86167e6fb6056e252de8d83bc7395
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.196.235" sh -
+
+SERVER_IP=192.168.16.108
+K3S_NODE_TOKEN=K104cebf373c7cb49a90856c4a310c89f0d14d78f360be714cd6c6b619e8b965354::server:11272c3df7e4a1aa2a41d9b53b4c3732
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--prefer-bundled-bin" sh -
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.198.6" sh -
+
 
 SERVER_IP=34.31.109.232
 K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
