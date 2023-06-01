@@ -30,13 +30,13 @@ make install-helm && make install-gpu-req && make kubeflow-dashboard
 If you want to run commands manually
 
 ```
-	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 &&chmod 700 get_helm.sh && ./get_helm.sh
-  sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-	sudo helm repo update
-	sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin --namespace nvidia-device-plugin --create-namespace --version 0.14.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
-    sudo helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
-	sudo helm repo update
-	sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery --version 0.8.0 --namespace gpu-feature-discovery --create-namespace --kubeconfig /etc/rancher/k3s/k3s.yaml
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 &&chmod 700 get_helm.sh && ./get_helm.sh
+sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+sudo helm repo update
+sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin --namespace nvidia-device-plugin --create-namespace --version 0.14.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
+sudo helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
+sudo helm repo update
+sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery --version 0.8.0 --namespace gpu-feature-discovery --create-namespace --kubeconfig /etc/rancher/k3s/k3s.yaml
 ```
 You need the NVIDIA Device Plugin and NVIDIA GPU Discovery Feature in order to use nvidia.com/gpu tag.
 3. Create a Notebook on Kubeflow Dashboard
