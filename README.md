@@ -40,7 +40,7 @@ sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery --version 0.8.0 --namespa
 ```
 You need the NVIDIA Device Plugin and NVIDIA GPU Discovery Feature in order to use nvidia.com/gpu tag.
 3. Create a Notebook on Kubeflow Dashboard
-4. You can specify the pod specs including the number of GPUs you want your nootebook to run.
+4. You can specify the pod specs including the number of GPUs you want your nootebook to run. 
 
 
 ## Setup Node with GPU on GenesisCloud
