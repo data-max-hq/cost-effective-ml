@@ -56,4 +56,13 @@ install-ray:
 ray-dashboard:
 	sudo k3s kubectl port-forward --address 0.0.0.0 svc/raycluster-kuberay-head-svc 8265:8265
 
+install-helm:
+	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
 
+install-gpu-req:
+	sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+	sudo helm repo update
+	sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin --namespace nvidia-device-plugin --create-namespace --version 0.14.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
+    sudo helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
+	sudo helm repo update
+	sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery --version 0.8.0 --namespace gpu-feature-discovery --create-namespace --kubeconfig /etc/rancher/k3s/k3s.yaml
