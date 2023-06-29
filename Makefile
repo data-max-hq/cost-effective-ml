@@ -14,7 +14,7 @@ base-install:
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 	sudo apt-get update -y
 	sudo apt-get install apt-transport-https git helm make -y
-	# install customize
+	# install kustomize
 	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 	sudo mv kustomize /bin/
 
@@ -42,7 +42,7 @@ install-kubeflow:
 	while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 kubeflow-dashboard:
-	sudo k3kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:8080 --address='0.0.0.0'
+	sudo k3s kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
 
 install-ray:
 	sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/

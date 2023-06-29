@@ -31,9 +31,9 @@ sudo systemctl restart k3s-agent
 
 # Install k3s main, only in master
 # curl -sfL https://get.k3s.io | sh -
---node-external-ip=34.31.109.232 --flannel-backend=wireguard-native --flannel-external-ip
-
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--node-external-ip=147.189.199.227 --flannel-backend=wireguard-native --flannel-external-ip --prefer-bundled-bin" sh -
+#--node-external-ip=34.31.109.232 --flannel-backend=wireguard-native --flannel-external-ip
+#
+#curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--node-external-ip=147.189.199.227 --flannel-backend=wireguard-native --flannel-external-ip --prefer-bundled-bin" sh -
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
@@ -42,24 +42,9 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 # sudo cat /var/lib/rancher/k3s/server/node-token
 export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
-# Add agent nodes
-SERVER_IP=10.128.0.42
-
-SERVER_IP=192.168.19.175
-K3S_NODE_TOKEN=K100020d486a39b78ea56f96173e5c712b9dca836898e533b38b78157b88facd8f8::server:8f3eb64b4705f67062004c1ca3bfdd46
+SERVER_IP=
+K3S_NODE_TOKEN=
 curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
-
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.198.6" sh -
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN="k3s master file:/var/lib/rancher/k3s/server/node-token" INSTALL_K3S_EXEC="--node-external-ip=147.189.198.6" sh -
-
-
-SERVER_IP=34.31.109.232
-K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=147.189.196.95" sh -
-
-SERVER_IP=34.31.109.232
-K3S_NODE_TOKEN=K10f7d0ceaf25e86b0148939a78542c4acfcf0828f17930161b9ee95a76fe854378::server:02315bc502e917c3962303f6141bfb71
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_EXEC="--node-external-ip=35.193.173.186" sh -
 
 # Dashboard
 # https://docs.k3s.io/installation/kube-dashboard
@@ -85,14 +70,14 @@ sudo k3s kubectl label nodes k3s-instance-5 gpu=true
 
 ## install kuberay operator
 
-# Kubeflow UI
-export PIPELINE_VERSION=1.8.5
-sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
-sudo k3s kubectl wait --for condition=established --timeout=60s crd/applications.app.k8s.io
-sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/dev?ref=$PIPELINE_VERSION"
-
-
-sudo k3s kubectl port-forward svc/ml-pipeline-ui  -n kubeflow 8080:80 --address='0.0.0.0'
+# Kubeflow Pipelines
+# export PIPELINE_VERSION=1.8.5
+#sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=$PIPELINE_VERSION"
+#sudo k3s kubectl wait --for condition=established --timeout=60s crd/applications.app.k8s.io
+#sudo k3s kubectl apply -k "github.com/kubeflow/pipelines/manifests/kustomize/env/dev?ref=$PIPELINE_VERSION"
+#
+#
+#sudo k3s kubectl port-forward svc/ml-pipeline-ui  -n kubeflow 8080:80 --address='0.0.0.0'
 
 ##install kubeflow
 #git clone https://github.com/kubeflow/manifests.git
