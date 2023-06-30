@@ -1,3 +1,6 @@
+ssh:
+	ssh ubuntu@147.189.198.9
+
 req:
 	# Install requirements
 	sudo apt-get update -y && sudo apt-get upgrade -y && \
@@ -53,7 +56,6 @@ checkkubeflow:
 
 kubeflow-port:
 	sudo kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
-
 
 kuberay:
 	sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
