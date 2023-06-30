@@ -75,3 +75,6 @@ checkraycluster:
 
 raycluster-port:
 	sudo k3s kubectl port-forward --address 0.0.0.0 svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com
+
+uninstall:
+	/usr/local/bin/k3s-uninstall.sh
