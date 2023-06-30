@@ -64,7 +64,7 @@ sudo helm install --wait --generate-name \
 
 - Install NVIDA K8S Device pulgin
 ```
-sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
+  sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
   sudo helm repo update
   sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin \
   --namespace nvidia-device-plugin \

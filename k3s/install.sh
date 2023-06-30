@@ -7,11 +7,7 @@
 # 4 CPU 16 GB 100 GB
 sudo apt-get update -y && sudo apt-get upgrade -y
 
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
 
-sudo apt-get install apt-transport-https git helm -y
 
 # install customize
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
@@ -20,6 +16,13 @@ sudo mv kustomize /bin/
 ## Prepare registries
 sudo mkdir -p /etc/rancher/k3s
 sudo vi /etc/rancher/k3s/registries.yaml
+
+## Install nvidia-container-toolkit
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y nvidia-container-toolkit
 
 # server
 sudo systemctl restart k3s
@@ -67,6 +70,9 @@ sudo k3s kubectl label nodes k3s-instance-2 cpu=true
 sudo k3s kubectl label nodes k3s-instance-3 cpu=true
 sudo k3s kubectl label nodes k3s-instance-4 gpu=true
 sudo k3s kubectl label nodes k3s-instance-5 gpu=true
+
+
+# https://github.com/k3s-io/k3s/issues/4391#issuecomment-1233314825
 
 ## install kuberay operator
 

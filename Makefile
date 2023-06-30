@@ -14,6 +14,8 @@ base-install:
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 	sudo apt-get update -y
 	sudo apt-get install apt-transport-https git helm make -y
+	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
+
 	# install kustomize
 	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 	sudo mv kustomize /bin/
@@ -49,8 +51,8 @@ install-ray:
 	sudo helm repo update
 	# Install both CRDs and KubeRay operator v0.4.0.
 	export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-	sudo helm install kuberay-operator kuberay/kuberay-operator --version 0.4.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
-	sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm install raycluster kuberay/ray-cluster --version 0.4.0
+	sudo helm install kuberay-operator kuberay/kuberay-operator --version 0.5.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
+	sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm install raycluster kuberay/ray-cluster --version 0.5.0
 	sudo k3s kubectl get pods
 
 ray-dashboard:
@@ -62,7 +64,18 @@ install-helm:
 install-gpu-req:
 	sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
 	sudo helm repo update
-	sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin --namespace nvidia-device-plugin --create-namespace --version 0.14.0 --kubeconfig /etc/rancher/k3s/k3s.yaml
-    sudo helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
-	sudo helm repo update
-	sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery --version 0.8.0 --namespace gpu-feature-discovery --create-namespace --kubeconfig /etc/rancher/k3s/k3s.yaml
+	sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin \
+		--namespace nvidia-device-plugin \
+		--set runtimeClassName=nvidia \
+		--create-namespace \
+		--version 0.14.0 \
+		--kubeconfig /etc/rancher/k3s/k3s.yaml
+#    sudo helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
+#	sudo helm repo update
+#	sudo helm upgrade -i nvgfd nvgfd/gpu-feature-discovery \
+#		--version 0.8.0 \
+#		--namespace gpu-feature-discovery \
+#		--set runtimeClassName=nvidia \
+#		--set nfd.enableNodeFeatureApi=true \
+#		--create-namespace \
+#		--kubeconfig /etc/rancher/k3s/k3s.yaml

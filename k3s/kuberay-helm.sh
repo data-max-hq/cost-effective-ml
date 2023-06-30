@@ -9,7 +9,7 @@ sudo helm upgrade --install \
   --version 0.5.0 \
   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
-sudo helm list --kubeconfig /etc/rancher/k3s/k3s.yaml
+#sudo helm list --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 # Check the KubeRay operator Pod in `default` namespace
 sudo k3s kubectl get pods
