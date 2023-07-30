@@ -1,13 +1,11 @@
 # Install requirements
-sudo apt-get update -y && sudo apt-get upgrade -y
-
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
-
-sudo apt-get install apt-transport-https git make -y
+sudo apt-get update -y && sudo apt-get upgrade -y \
+&& curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh \
+&& sudo apt-get install apt-transport-https git make -y
 
 # install kustomize
-curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-sudo mv kustomize /bin/
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash \
+&& sudo mv kustomize /bin/
 
 # Install nvidia-container-toolkit
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
@@ -19,6 +17,17 @@ distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
 
 # Install k3s
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
+
+## Kubernetes Dashboard
+sudo helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/ \
+   && sudo helm repo update
+
+sudo helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
+    --create-namespace \
+    --namespace kubernetes-dashboard \
+    --kubeconfig /etc/rancher/k3s/k3s.yaml
+# sudo k3s kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v3.0.0-alpha0/charts/kubernetes-dashboard.yaml
+sudo k3s kubectl port-forward svc/kubernetes-dashboard-web -n kubernetes-dashboard 8000:8000 --address='0.0.0.0'
 
 # Install GPU Operator
 sudo helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
@@ -59,17 +68,17 @@ sudo kubectl describe nodes
 git clone https://github.com/data-max-hq/manifests.git
 cd manifests/
 while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
-
+#check Kubeflow installation
 sudo kubectl get po -n kubeflow
 
 sudo kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
 
 # Install kuberay-operator
-sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
-sudo helm repo update
+sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/ \
+&& sudo helm repo update
 sudo helm upgrade --install \
   kuberay-operator kuberay/kuberay-operator \
-  --version 0.5.0 \
+  --version 0.6.0 \
   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 # Check the KubeRay operator Pod in `default` namespace
@@ -80,6 +89,9 @@ sudo k3s kubectl get svc
 
 #Install cluster
 sudo kubectl apply -f cluster.yaml
+
+# check cluster installation
+sudo kubectl get po -n kubeflow-user-example-com
 
 sudo k3s kubectl port-forward --address 0.0.0.0 svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com
 

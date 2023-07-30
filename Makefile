@@ -8,26 +8,25 @@ git-clone:
 	git clone git@github.com:data-max-hq/cost-efficient-ml.git
 
 base-install:
-	sudo apt-get update -y && sudo apt-get upgrade -y
-
-	curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-	sudo apt-get update -y
-	sudo apt-get install apt-transport-https git helm make -y
-	curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
+	# Install requirements
+	sudo apt-get update -y && sudo apt-get upgrade -y \
+	&& curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh \
+	&& sudo apt-get install apt-transport-https git make -y
 
 	# install kustomize
-	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-	sudo mv kustomize /bin/
+	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash \
+	&& sudo mv kustomize /bin/
 
 install-k3s:
-	curl -sfL https://get.k3s.io | sh -
+	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
+install-k3s-node-token:
+	sudo cat /var/lib/rancher/k3s/server/node-token
 
 install-agent-k3s:
-	SERVER_IP=10.128.0.35
+	SERVER_IP=192.168.11.120
 	K3S_NODE_TOKEN=
-	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
+	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
 k8s-dashboard:
 	# https://docs.k3s.io/installation/kube-dashboard

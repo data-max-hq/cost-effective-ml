@@ -32,21 +32,15 @@ sudo systemctl restart k3s-agent
 /usr/local/bin/k3s-uninstall.sh
 /usr/local/bin/k3s-agent-uninstall.sh
 
-# Install k3s main, only in master
-# curl -sfL https://get.k3s.io | sh -
-#--node-external-ip=34.31.109.232 --flannel-backend=wireguard-native --flannel-external-ip
-#
-#curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 INSTALL_K3S_EXEC="--node-external-ip=147.189.199.227 --flannel-backend=wireguard-native --flannel-external-ip --prefer-bundled-bin" sh -
 
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
-
 
 # Get node token
 # sudo cat /var/lib/rancher/k3s/server/node-token
 export K3S_NODE_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 
-SERVER_IP=192.168.19.18
-K3S_NODE_TOKEN=K10f5c3ff8a46348aac2de4fe93ed5713c11b4e44fa42369cb427c38f006dcedb0f::server:da603a60a55462c5df2c2fcc85b2d848
+SERVER_IP=
+K3S_NODE_TOKEN=
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 
 # Dashboard
