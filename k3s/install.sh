@@ -49,20 +49,6 @@ sudo kubectl get po -n gpu-operator
 
 sudo kubectl describe nodes
 
-# - Install nvidia K8S Device plugin
-#sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-#  sudo helm repo update
-#  sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin \
-#  --namespace nvidia-device-plugin \
-#  --create-namespace \
-#  --version 0.14.0 \
-#  --kubeconfig /etc/rancher/k3s/k3s.yaml
-#
-## check installation
-#sudo kubectl get po -n nvidia-device-plugin
-#
-#sudo helm uninstall nvdp -n nvidia-device-plugin --kubeconfig /etc/rancher/k3s/k3s.yaml
-
 
 # Install Kubeflow
 git clone https://github.com/data-max-hq/manifests.git
@@ -70,6 +56,8 @@ cd manifests/
 while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 #check Kubeflow installation
 sudo kubectl get po -n kubeflow
+# delete kubeflow
+# kustomize build example | sudo kubectl delete -f -
 
 sudo kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
 
@@ -78,13 +66,17 @@ sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/ \
 && sudo helm repo update
 sudo helm upgrade --install \
   kuberay-operator kuberay/kuberay-operator \
+  --namespace kuberay \
+  --create-namespace \
   --version 0.6.0 \
   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 # Check the KubeRay operator Pod in `default` namespace
-sudo k3s kubectl get pods
+sudo k3s kubectl get pods --n kuberay
 
 sudo k3s kubectl get svc
+
+#sudo helm uninstall kuberay-operator --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 
 #Install cluster
