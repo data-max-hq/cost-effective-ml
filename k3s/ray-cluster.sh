@@ -9,7 +9,7 @@ metadata:
   name: example-cluster
   namespace: kubeflow-user-example-com
 spec:
-  rayVersion: "2.5.1"
+  rayVersion: "2.6.1"
   ######################headGroupSpec#################################
   # head group template and specs, (perhaps "group" is not needed in the name)
   headGroupSpec:
@@ -38,7 +38,7 @@ spec:
       spec:
         containers:
         - name: ray-head
-          image:  rayproject/ray-ml:2.5.1.164b25-py38-gpu
+          image:  rayproject/ray-ml:2.6.1.7474f8-gpu
           ports:
           - containerPort: 6379
             name: gcs
@@ -92,7 +92,7 @@ spec:
       spec:
         containers:
         - name: machine-learning # must consist of lower case alphanumeric characters or "-", and must start and end with an alphanumeric character (e.g. "my-name",  or "123-abc"
-          image: rayproject/ray-ml:2.5.1.164b25-py38-gpu
+          image: rayproject/ray-ml:2.6.1.7474f8-gpu
           # environment variables to set in the container.Optional.
           # Refer to https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
           lifecycle:
