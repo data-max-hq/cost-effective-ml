@@ -54,11 +54,11 @@ spec:
                 command: ["/bin/sh","-c","ray stop"]
           resources:
             limits:
-              nvidia.com/gpu: "2"
+              nvidia.com/gpu: "1"
               cpu: "1"
               memory: "8G"
             requests:
-              nvidia.com/gpu: "2"
+              nvidia.com/gpu: "1"
               cpu: "500m"
               memory: "4G"
   workerGroupSpecs:
@@ -106,11 +106,11 @@ spec:
               name: log-volume
           resources:
             limits:
-              nvidia.com/gpu: "2"
+              nvidia.com/gpu: "1"
               cpu: "1"
               memory: "8G"
             requests:
-              nvidia.com/gpu: "2"
+              nvidia.com/gpu: "1"
               cpu: "500m"
               memory: "4G"
         initContainers:

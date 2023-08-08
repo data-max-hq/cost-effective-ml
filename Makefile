@@ -9,12 +9,18 @@ req:
 	curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash && \
 	sudo mv kustomize /bin/
 
+check-node:
+	nvidia-smi
+
 nvidia-container-toolkit:
 	distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
     && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
     && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
     && sudo apt-get update \
     && sudo apt-get install -y nvidia-container-toolkit
+
+check-toolkit:
+	nvidia-container-toolkit --version
 
 k3s:
 	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
@@ -24,9 +30,11 @@ install-k3s-node-token:
 
 k3s-agents:
 	SERVER_IP=192.168.11.120
-	K3S_NODE_TOKEN=
+	K3S_NODE_TOKEN=K10fad181b675d792473780feff81eea84322982cdfc84f879751c4b6868bbcbd61::server:7feea96f94cd803adf5f5d3bec569e83
 	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
+check-nodes:
+	sudo kubectl get nodes
 #k3sdashboard:
 #	chmod +x k3s-dashboard.sh
 #	./k3s-dashboard.sh
@@ -39,20 +47,21 @@ k3s-agents:
 
 gpu-operator:
 	sudo helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
-   	&& sudo helm repo update
-	sudo helm upgrade --install --wait gpu-operator \
-     --namespace gpu-operator \
-     --create-namespace \
-      nvidia/gpu-operator \
-      --set driver.enabled=false \
-      --set toolkit.enabled=false \
-      --kubeconfig /etc/rancher/k3s/k3s.yaml
+   	&& sudo helm repo update \
+	&& sudo helm upgrade --install --wait gpu-operator \
+		--namespace gpu-operator \
+		--create-namespace \
+		nvidia/gpu-operator \
+		--set driver.enabled=false \
+		--set toolkit.enabled=false \
+		--kubeconfig /etc/rancher/k3s/k3s.yaml
 
-checkgpu:
+check-gpu-operator:
 	sudo kubectl get po -n gpu-operator
 
-checknodes:
+describe-nodes:
 	sudo kubectl describe nodes
+	#sudo kubectl describe nodes k3s-instance-1
 
 kubeflow:
 	git clone https://github.com/data-max-hq/manifests.git
@@ -76,7 +85,7 @@ kuberay:
   	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 check-kuberay:
-	sudo k3s kubectl get pods
+	sudo k3s kubectl get pods -n kuberay-operator
 
 raycluster:
 	#Install cluster
