@@ -62,7 +62,9 @@ kuberay:
 	sudo helm repo update
 	sudo helm upgrade --install \
   	kuberay-operator kuberay/kuberay-operator \
-  	--version 0.5.0 \
+  	--namespace kuberay-operator \
+    --create-namespace \
+  	--version 0.6.0 \
   	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 checkkuberay:

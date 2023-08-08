@@ -72,7 +72,7 @@ sudo helm upgrade --install \
   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 # Check the KubeRay operator Pod in `default` namespace
-sudo k3s kubectl get pods --n kuberay
+sudo k3s kubectl get pods -n kuberay
 
 sudo k3s kubectl get svc
 
