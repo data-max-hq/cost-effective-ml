@@ -79,7 +79,7 @@ check-kubeflow:
 	sudo kubectl get po -n kubeflow
 
 kubeflow-port:
-	sudo kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
+	sudo kubectl port-forward svc/istio-ingressgateway 8080:80 -n istio-system --address 0.0.0.0
 
 kuberay:
 	sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
@@ -104,7 +104,7 @@ check-raycluster:
 	sudo kubectl get pods -n kubeflow-user-example-com
 
 raycluster-port:
-	sudo kubectl port-forward --address 0.0.0.0 svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com
+	sudo kubectl port-forward svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com --address 0.0.0.0
 
 uninstall:
 	/usr/local/bin/k3s-uninstall.sh
