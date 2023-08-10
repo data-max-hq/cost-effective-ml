@@ -3,6 +3,7 @@
 # Variables
 #K3S_VERSION?=v1.25.8+k3s1
 KUBERAY_VERSION?=0.6.0
+GPU_OPERATOR_VERSION?=v23.6.0
 
 req:
 	# Install requirements
@@ -59,6 +60,7 @@ gpu-operator:
 		--namespace gpu-operator \
 		--create-namespace \
 		nvidia/gpu-operator \
+		--version ${GPU_OPERATOR_VERSION} \
 		--set driver.enabled=false \
 		--set toolkit.enabled=false \
 		--kubeconfig /etc/rancher/k3s/k3s.yaml
