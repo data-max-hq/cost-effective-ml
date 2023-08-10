@@ -1,3 +1,10 @@
+.PHONY: ssh req check-node nvidia-container-toolkit check-toolkit k3s get-k3s-node-token k3s-agents check-nodes gpu-operator check-gpu-operator describe-nodes kubeflow check-kubeflow kubeflow-port kuberay check-kuberay raycluster check-raycluster raycluster-port uninstall uninstall-agent
+
+# Variables
+K3S_VERSION?=v1.26.7+k3s1
+SERVER_IP?=192.168.11.120
+#K3S_VERSION?=v1.25.8+k3s1
+
 ssh:
 	ssh ubuntu@147.189.198.9
 
@@ -23,18 +30,19 @@ check-toolkit:
 	nvidia-container-toolkit --version
 
 k3s:
-	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
+	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=$(K3S_VERSION) sh -
 
-install-k3s-node-token:
+get-k3s-node-token:
 	sudo cat /var/lib/rancher/k3s/server/node-token
 
 k3s-agents:
 	SERVER_IP=192.168.11.120
-	K3S_NODE_TOKEN=K10fad181b675d792473780feff81eea84322982cdfc84f879751c4b6868bbcbd61::server:7feea96f94cd803adf5f5d3bec569e83
-	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
+	K3S_NODE_TOKEN=
+	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_VERSION=$(K3S_VERSION) sh -
 
 check-nodes:
 	sudo kubectl get nodes
+
 #k3sdashboard:
 #	chmod +x k3s-dashboard.sh
 #	./k3s-dashboard.sh
@@ -88,9 +96,9 @@ check-kuberay:
 	sudo kubectl get pods -n kuberay-operator
 
 raycluster:
-	#Install cluster
+	#Create Ray cluster
 	sudo sh ray-cluster.sh
-	#sudo kubectl apply -f ray-cluster.yaml
+	#sudo kubectl apply -f k3s/ray-cluster.yaml
 	#sudo kubectl apply -f https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/k3s/ray-cluster.yaml
 
 check-raycluster:
