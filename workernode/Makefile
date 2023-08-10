@@ -1,4 +1,7 @@
-.PHONY: nvidia-container-toolkit check-toolkit k3s-agents uninstall-agent
+.PHONY: req nvidia-container-toolkit check-toolkit k3s-agents uninstall-agent
+
+req:
+	sudo apt-get install apt-transport-https git make -y
 
 nvidia-container-toolkit:
 	distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
