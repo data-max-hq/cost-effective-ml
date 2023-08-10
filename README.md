@@ -1,53 +1,63 @@
 # Cost Effective ML
-Building a Hybrid Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
+Building a Multi GPY Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
 
 ## Building the hybrid Kubernetes Cluster
 ![1-setup.png](diagrams/images/1-setup.png)
 
-## ToDo:
-1. Create two nodes and add them in cluster
-2. Enable dashboard
-3. Add nodes in separate node groups
-4. Install kubeflow pipelines
-5. Run sample tasks in separate node groups (taints and tolerations)
-6. Install Ray and run ray tasks from Kubeflow
-7. Enable Ray dashboard
-8. Do the same with GPU nodes
+## What we will be doing:
+1. Create one CPU node and two GPU nodes
+2. Create a Kubernetes cluster and add the nodes in cluster
+3. Enable Kubernetes dashboard
+4. Install NVidia GPU Operator
+5. Check GPUs are available in the cluster
+6. Install Kuberay
+7. Create a Ray Cluster
+8. Enable Ray dashboard
+9. Run Ray workload in Kubeflow
 
 ## Prerequisites
 These tools must be installed in the nodes before starting:
 * Git
 * Helm3
 * Kustomize
+* Make
+* Nvidia Container Runtime
 
-## How to setup K3S master node
+## How to set up K3S master node
 
-- Install K3S
+- Install common utilities
+```commandline
+sudo apt-get install apt-transport-https git make -y
 ```
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
-```
-*Run this command to chown kubectl to use without sudo
-```
-sudo chown $USER /etc/rancher/k3s/k3s.yaml
-```
+
 - Install helm
-```
+```commandline
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
    && chmod 700 get_helm.sh \
    && ./get_helm.sh
-
 ```
+
 - Install kustomize
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 sudo mv kustomize /bin/
 ```
 
+- Install K3S
+```
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
+```
+
+- Run this command to `chown` kubectl to use without sudo
+```
+sudo chown $USER /etc/rancher/k3s/k3s.yaml
+```
+
 - Install NVIDIA GPU Operator 
 
-It allows cluster to have access to GPUs on nodes. It installs the neccessary tools to have access to GPU.
+It allows cluster to have access to GPUs on nodes. It installs the necessary tools to have access to GPU.
 
-More on [NVIDIA-GPU-OPERATOR](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/overview.html)
+More on [nvidia-gpu-operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/overview.html)
 
 ```
 sudo helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
@@ -60,23 +70,10 @@ sudo helm install --wait --generate-name \
       --set toolkit.enabled=false \
       --kubeconfig /etc/rancher/k3s/k3s.yaml
 ```
-*Note: Wait for cluster resources to be utilized
 
-- Install NVIDA K8S Device pulgin
-```
-  sudo helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-  sudo helm repo update
-  sudo helm upgrade -i nvdp nvdp/nvidia-device-plugin \
-  --namespace nvidia-device-plugin \
-  --create-namespace \
-  --version 0.14.0 \
-  --kubeconfig /etc/rancher/k3s/k3s.yaml
-```
+* Note: Wait for cluster resources to be utilized
 
-*Restart K3S if gpus do not show as allocatable resources on node.
-```sh
-sudo systemctl restart k3s
-```
+
 ## K3S nodes setup
 
 Install Nvidia container runtime
@@ -90,11 +87,11 @@ sudo apt-get update \
     && sudo apt-get install -y nvidia-container-toolkit
 ```
 
-*Note: You may need to wait a couple minutes while nvidia driver are being installed. You can check by running 
+* Note: You may need to wait a couple of minutes while NVidia drivers are being installed. You can check by running 
 ```sh
 nvidia-smi
 ```
-on node terminal which shows information about gpu.
+on node terminal which shows information about GPU.
 
 Installing K3S agent
 ```sh
@@ -102,33 +99,44 @@ export K3S_NODE_TOKEN=(sudo cat /var/lib/rancher/k3s/server/node-token on master
 export SERVER_IP=(Public/Private IP of master node)
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 ```
-
-*Restart K3S-agent 
-```sh
-sudo systemctl restart k3s-agent
-```
     
 ## Usage/Examples
 
 You can play around with GPUs by using Jupyter Notebook.
 
-Install Kubeflow
+- Install Kubeflow:
 ```sh
 git clone https://github.com/data-max-hq/manifests.git
 cd manifests/
 while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 ```
-*You may need to wait for a couple of retries as resources are being provisioned.
 
-After Kubeflow is properly installed:
+- Check Kubeflow installation status:
+```commandline
+sudo kubectl get po -n kubeflow
+```
+
+- After Kubeflow is properly installed, expose the Kubeflow UI:
 ```sh
 kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
 ```
 
-Create a Jupyter Notebook on Kubeflow Dashboard with specific resources with number of GPUs and set vendor to NVIDIA
+- Install Kuberay Operator:
+```commandline
+sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
+sudo helm repo update
+sudo helm upgrade --install \
+    kuberay-operator kuberay/kuberay-operator \
+    --namespace kuberay-operator \
+    --create-namespace \
+    --version 0.6.0 \
+    --kubeconfig /etc/rancher/k3s/k3s.yaml
+```
 
-Connect to Jupyter Notebook and [here](https://docs.ray.io/en/latest/ray-air/examples/convert_existing_tf_code_to_ray_air.html) you can find an example notebook which make use of gpu.
-
+- Create Ray Cluster
+```commandline
+sh ray-cluster.sh
+```
 
 ## Troubleshooting
 * Configure private registries in k3s: https://docs.k3s.io/installation/private-registry
@@ -145,4 +153,4 @@ Connect to Jupyter Notebook and [here](https://docs.ray.io/en/latest/ray-air/exa
 * https://docs.ray.io/en/latest/ray-air/examples/convert_existing_tf_code_to_ray_air.html
 
 
-Made with ❤️ by [Data-Max.io](https://www.data-max.io/).
+Made with ❤️ by [data-max.io](https://www.data-max.io/).
