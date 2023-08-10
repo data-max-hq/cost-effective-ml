@@ -31,21 +31,21 @@ These tools must be installed in the nodes before starting:
 sudo apt-get install apt-transport-https git make -y
 ```
 
-#### Install helm
+#### Install `helm`
 ```commandline
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
    && chmod 700 get_helm.sh \
    && ./get_helm.sh
 ```
 
-#### Install kustomize
+#### Install `kustomize`
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 sudo mv kustomize /bin/
 ```
 
-### Install Kubernets
-#### Install K3S
+### Install Kubernetes
+#### Install `K3S` on the main node
 ```
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 ```
@@ -58,13 +58,13 @@ sudo chown $USER /etc/rancher/k3s/k3s.yaml
 ## Kubernetes worker nodes setup
 
 ### Install prerequisites
-#### (If node contains GPUs) Make sure Nvidia drivers are installed
+#### (If node contains GPUs) Make sure NVIDIA drivers are installed
 Check by running:
 ```sh
 nvidia-smi
 ```
 
-#### Install Nvidia Container Runtime
+#### Install `Nvidia Container Runtime`
 ```bash
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
     && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
@@ -74,16 +74,24 @@ sudo apt-get update \
     && sudo apt-get install -y nvidia-container-toolkit
 ```
 
-### Installing K3S agent
+### Installing `K3S` agents on worker nodes
+
+#### From the main node get the node token
+```commandline
+sudo cat /var/lib/rancher/k3s/server/node-token on master node
+```
+
+#### Run the `K3S` installation command on the worker nodes
 ```sh
-export K3S_NODE_TOKEN=(sudo cat /var/lib/rancher/k3s/server/node-token on master node )
+export K3S_NODE_TOKEN=NODE_TOKEN
 export SERVER_IP=(Public/Private IP of master node)
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
 ```
 
 ## Install NVIDIA GPU Operator from the main node
 
-It allows cluster to have access to GPUs on nodes. It installs the necessary tools to have access to GPU.
+NVIDIA GPU Operator allows the cluster to have access to GPUs in nodes. 
+It installs the necessary tools to make the GPUs accessible for Kubernetes.
 
 More on [nvidia-gpu-operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/overview.html)
 
