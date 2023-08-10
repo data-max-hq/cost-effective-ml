@@ -1,12 +1,8 @@
-.PHONY: ssh req check-node nvidia-container-toolkit check-toolkit k3s get-k3s-node-token k3s-agents check-nodes gpu-operator check-gpu-operator describe-nodes kubeflow check-kubeflow kubeflow-port kuberay check-kuberay raycluster check-raycluster raycluster-port uninstall uninstall-agent
+.PHONY: req check-node nvidia-container-toolkit check-toolkit k3s get-k3s-node-token k3s-agents check-nodes gpu-operator check-gpu-operator describe-nodes kubeflow check-kubeflow kubeflow-port kuberay check-kuberay raycluster check-raycluster raycluster-port uninstall uninstall-agent
 
 # Variables
-K3S_VERSION?=v1.26.7+k3s1
-SERVER_IP?=192.168.11.120
 #K3S_VERSION?=v1.25.8+k3s1
-
-ssh:
-	ssh ubuntu@147.189.198.9
+KUBERAY_VERSION?=0.6.0
 
 req:
 	# Install requirements
@@ -30,15 +26,18 @@ check-toolkit:
 	nvidia-container-toolkit --version
 
 k3s:
-	curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=$(K3S_VERSION) sh -
+	curl -sfL https://get.k3s.io | K3S_TOKEN=12345 INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
+
+su-kubectl:
+	sudo chown $USER /etc/rancher/k3s/k3s.yaml
 
 get-k3s-node-token:
 	sudo cat /var/lib/rancher/k3s/server/node-token
 
 k3s-agents:
-	SERVER_IP=192.168.11.120
-	K3S_NODE_TOKEN=
-	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} INSTALL_K3S_VERSION=$(K3S_VERSION) sh -
+	SERVER_IP=192.168.8.27
+	#K3S_NODE_TOKEN=
+	curl -sfL https://get.k3s.io | K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=12345 INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
 check-nodes:
 	sudo kubectl get nodes
@@ -74,7 +73,7 @@ describe-nodes:
 kubeflow:
 	git clone https://github.com/data-max-hq/manifests.git
 	cd manifests/
-	while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+	while ! kustomize build example | awk '!/well-defined/' | sudo kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 check-kubeflow:
 	sudo kubectl get po -n kubeflow
@@ -89,7 +88,7 @@ kuberay:
   	kuberay-operator kuberay/kuberay-operator \
   	--namespace kuberay-operator \
     --create-namespace \
-  	--version 0.6.0 \
+  	--version ${KUBERAY_VERSION} \
   	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 check-kuberay:
@@ -111,4 +110,4 @@ uninstall:
 	/usr/local/bin/k3s-uninstall.sh
 
 uninstall-agent:
-	/usr/local/bin/k3s-uninstall.sh
+	/usr/local/bin/k3s-agent-uninstall.sh
