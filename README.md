@@ -1,14 +1,14 @@
 # Cost Effective ML
-Building a Multi GPY Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
+Building a Multi GPU Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
 
-## Building the hybrid Kubernetes Cluster
+## Building the Multi GPU Kubernetes Cluster
 ![1-setup.png](diagrams/images/1-setup.png)
 
 ## What we will be doing:
 1. Create one CPU node and two GPU nodes
 2. Create a Kubernetes cluster and add the nodes in cluster
 3. Enable Kubernetes dashboard
-4. Install NVidia GPU Operator
+4. Install NVIDIA GPU Operator
 5. Check GPUs are available in the cluster
 6. Install Kuberay
 7. Create a Ray Cluster
