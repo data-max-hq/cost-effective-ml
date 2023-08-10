@@ -1,5 +1,8 @@
 .PHONY: req nvidia-container-toolkit check-toolkit k3s-agents uninstall-agent
 
+# wget https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/workernode/Makefile
+# export SERVER_IP=192.168.8.27
+
 req:
 	sudo apt-get install apt-transport-https git make -y
 
