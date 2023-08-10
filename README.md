@@ -10,7 +10,7 @@ Building a Multi GPU Kubernetes Cluster for Scalable and Cost-Effective ML Train
 3. Enable Kubernetes dashboard
 4. Install NVIDIA GPU Operator
 5. Check GPUs are available in the cluster
-6. Install Kuberay
+6. Install KubeRay
 7. Create a Ray Cluster
 8. Enable Ray dashboard
 9. Run Ray workload in Kubeflow
@@ -32,14 +32,14 @@ sudo apt-get install apt-transport-https git make -y
 ```
 
 #### Install `helm`
-```commandline
+```sh
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
    && chmod 700 get_helm.sh \
    && ./get_helm.sh
 ```
 
 #### Install `kustomize`
-```
+```sh
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 sudo mv kustomize /bin/
 ```
@@ -51,7 +51,7 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 ```
 
 #### Run `kubectl` without sudo
-```
+```sh
 sudo chown $USER /etc/rancher/k3s/k3s.yaml
 ```
 
@@ -65,7 +65,7 @@ nvidia-smi
 ```
 
 #### Install `Nvidia Container Runtime`
-```bash
+```sh
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
     && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
     && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
@@ -77,7 +77,7 @@ sudo apt-get update \
 ### Installing `K3S` agents on worker nodes
 
 #### From the main node get the node token
-```commandline
+```sh
 sudo cat /var/lib/rancher/k3s/server/node-token on master node
 ```
 
@@ -120,7 +120,7 @@ while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply
 ```
 
 #### Check Kubeflow installation status:
-```commandline
+```sh
 sudo kubectl get po -n kubeflow
 ```
 
@@ -130,8 +130,8 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address=
 ```
 
 ### Create Ray Cluster
-#### Install Kuberay Operator
-```commandline
+#### Install KubeRay Operator
+```sh
 sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
 sudo helm repo update
 sudo helm upgrade --install \
@@ -142,13 +142,13 @@ sudo helm upgrade --install \
     --kubeconfig /etc/rancher/k3s/k3s.yaml
 ```
 
-#### Check Operator Installation
-```commandline
+#### Check the Operator Installation
+```sh
 sudo kubectl get pods -n kuberay-operator
 ```
 
 #### Create Ray Cluster
-```commandline
+```sh
 sh ray-cluster.sh
 ```
 

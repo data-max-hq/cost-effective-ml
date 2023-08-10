@@ -91,6 +91,7 @@ raycluster:
 	#Install cluster
 	sudo sh ray-cluster.sh
 	#sudo kubectl apply -f ray-cluster.yaml
+	#sudo kubectl apply -f https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/k3s/ray-cluster.yaml
 
 check-raycluster:
 	sudo kubectl get pods -n kubeflow-user-example-com
