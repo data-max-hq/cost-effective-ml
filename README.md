@@ -111,24 +111,26 @@ sudo helm install --wait --generate-name \
 
 You can play around with GPUs by using Jupyter Notebook.
 
-- Install Kubeflow:
+### Install Kubeflow
+#### Install Kubeflow
 ```sh
 git clone https://github.com/data-max-hq/manifests.git
 cd manifests/
 while ! kustomize build example | awk '!/well-defined/' | sudo k3s kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 ```
 
-- Check Kubeflow installation status:
+#### Check Kubeflow installation status:
 ```commandline
 sudo kubectl get po -n kubeflow
 ```
 
-- After Kubeflow is properly installed, expose the Kubeflow UI:
+#### After Kubeflow is installed, expose the Kubeflow UI:
 ```sh
 kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80 --address='0.0.0.0'
 ```
 
-- Install Kuberay Operator:
+### Create Ray Cluster
+#### Install Kuberay Operator
 ```commandline
 sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
 sudo helm repo update
@@ -140,7 +142,12 @@ sudo helm upgrade --install \
     --kubeconfig /etc/rancher/k3s/k3s.yaml
 ```
 
-- Create Ray Cluster
+#### Check Operator Installation
+```commandline
+sudo kubectl get pods -n kuberay-operator
+```
+
+#### Create Ray Cluster
 ```commandline
 sh ray-cluster.sh
 ```

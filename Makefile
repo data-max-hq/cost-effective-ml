@@ -85,7 +85,7 @@ kuberay:
   	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 check-kuberay:
-	sudo k3s kubectl get pods -n kuberay-operator
+	sudo kubectl get pods -n kuberay-operator
 
 raycluster:
 	#Install cluster
@@ -93,10 +93,10 @@ raycluster:
 	#sudo kubectl apply -f ray-cluster.yaml
 
 check-raycluster:
-	sudo k3s kubectl get pods -n kubeflow-user-example-com
+	sudo kubectl get pods -n kubeflow-user-example-com
 
 raycluster-port:
-	sudo k3s kubectl port-forward --address 0.0.0.0 svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com
+	sudo kubectl port-forward --address 0.0.0.0 svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com
 
 uninstall:
 	/usr/local/bin/k3s-uninstall.sh
