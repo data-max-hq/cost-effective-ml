@@ -25,35 +25,63 @@ These tools must be installed in the nodes before starting:
 
 ## How to set up K3S master node
 
-- Install common utilities
+### Install prerequisites
+#### Install common utilities
 ```commandline
 sudo apt-get install apt-transport-https git make -y
 ```
 
-- Install helm
+#### Install helm
 ```commandline
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
    && chmod 700 get_helm.sh \
    && ./get_helm.sh
 ```
 
-- Install kustomize
+#### Install kustomize
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 sudo mv kustomize /bin/
 ```
 
-- Install K3S
+### Install Kubernets
+#### Install K3S
 ```
 curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 ```
 
-- Run this command to `chown` kubectl to use without sudo
+#### Run `kubectl` without sudo
 ```
 sudo chown $USER /etc/rancher/k3s/k3s.yaml
 ```
 
-- Install NVIDIA GPU Operator 
+## Kubernetes worker nodes setup
+
+### Install prerequisites
+#### (If node contains GPUs) Make sure Nvidia drivers are installed
+Check by running:
+```sh
+nvidia-smi
+```
+
+#### Install Nvidia Container Runtime
+```bash
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update \
+    && sudo apt-get install -y nvidia-container-toolkit
+```
+
+### Installing K3S agent
+```sh
+export K3S_NODE_TOKEN=(sudo cat /var/lib/rancher/k3s/server/node-token on master node )
+export SERVER_IP=(Public/Private IP of master node)
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
+```
+
+## Install NVIDIA GPU Operator from the main node
 
 It allows cluster to have access to GPUs on nodes. It installs the necessary tools to have access to GPU.
 
@@ -68,38 +96,9 @@ sudo helm install --wait --generate-name \
       nvidia/gpu-operator \
       --set driver.enabled=false \
       --set toolkit.enabled=false \
-      --kubeconfig /etc/rancher/k3s/k3s.yaml
+      --kubeconfig /etc/rancher/k3s/k3s.yaml  
 ```
 
-* Note: Wait for cluster resources to be utilized
-
-
-## K3S nodes setup
-
-Install Nvidia container runtime
-
-```bash
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
-    && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
-    && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-sudo apt-get update \
-    && sudo apt-get install -y nvidia-container-toolkit
-```
-
-* Note: You may need to wait a couple of minutes while NVidia drivers are being installed. You can check by running 
-```sh
-nvidia-smi
-```
-on node terminal which shows information about GPU.
-
-Installing K3S agent
-```sh
-export K3S_NODE_TOKEN=(sudo cat /var/lib/rancher/k3s/server/node-token on master node )
-export SERVER_IP=(Public/Private IP of master node)
-curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.25.8+k3s1 K3S_URL=https://${SERVER_IP}:6443 K3S_TOKEN=${K3S_NODE_TOKEN} sh -
-```
-    
 ## Usage/Examples
 
 You can play around with GPUs by using Jupyter Notebook.
