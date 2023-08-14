@@ -164,7 +164,8 @@ sh ray-cluster.sh
 * https://github.com/ray-project/kuberay
 * https://docs.ray.io/en/latest/cluster/kubernetes/examples/gpu-training-example.html#kuberay-gpu-training-example
 * https://ray-project.github.io/kuberay/deploy/helm/
-* https://docs.ray.io/en/latest/ray-air/examples/convert_existing_tf_code_to_ray_air.html
+* https://docs.ray.io/en/latest/train/train.html
+* https://github.com/NVIDIA/gpu-operator
 
 
 Made with ❤️ by [data-max.io](https://www.data-max.io/).

@@ -1,5 +1,6 @@
 .PHONY: req check-node nvidia-container-toolkit check-toolkit k3s get-k3s-node-token k3s-agents check-nodes gpu-operator check-gpu-operator describe-nodes kubeflow check-kubeflow kubeflow-port kuberay check-kuberay raycluster check-raycluster raycluster-port uninstall uninstall-agent
 
+# git clone https://github.com/data-max-hq/cost-effective-ml.git
 # Variables
 #K3S_VERSION?=v1.25.8+k3s1
 KUBERAY_VERSION?=0.6.0
@@ -43,6 +44,20 @@ k3s-agents:
 check-nodes:
 	sudo kubectl get nodes
 
+dashboard:
+	helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/ \
+   	&& helm repo update \
+	&& helm upgrade --install kubernetes-dashboard \
+	kubernetes-dashboard/kubernetes-dashboard \
+	--create-namespace \
+	--namespace kubernetes-dashboard \
+	--version 7.0.3 \
+	--set metrics-server.enabled=false \
+	--set nginx.enabled=false \
+	--set cert-manager.enabled=false \
+	--kubeconfig /etc/rancher/k3s/k3s.yaml
+
+# kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-nginx-controller 8443:443 --address 0.0.0.0
 #k3sdashboard:
 #	chmod +x k3s-dashboard.sh
 #	./k3s-dashboard.sh
