@@ -1,5 +1,6 @@
 # Cost Effective ML
-Building a Multi GPU Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow
+Building a Multi GPU Kubernetes Cluster for Scalable and Cost-Effective ML Training with Ray and Kubeflow. 
+Related blog post [here](https://www.data-max.io/post/multigpu-kubernetes-cluster-for-scalable-and-cost-effective-machine-learning-with-ray-and-kubeflow).
 
 ## Building the Multi GPU Kubernetes Cluster
 ![1-setup.png](diagrams/images/1-setup.png)
