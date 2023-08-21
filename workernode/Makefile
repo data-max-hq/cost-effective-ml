@@ -1,17 +1,17 @@
 .PHONY: req nvidia-container-toolkit check-toolkit k3s-agents uninstall-agent
 
 # wget https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/workernode/Makefile
-# export SERVER_IP=192.168.8.27
+# export SERVER_IP=192.168.8.203
 
 req:
 	sudo apt-get install apt-transport-https git make -y
 
 nvidia-container-toolkit:
 	distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
-    	&& curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
-    	&& curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
-    	&& sudo apt-get update \
-    	&& sudo apt-get install -y nvidia-container-toolkit
+    && curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add - \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y nvidia-container-toolkit
 
 k3s-agents:
 	#SERVER_IP=192.168.8.27

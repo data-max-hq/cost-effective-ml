@@ -69,9 +69,9 @@ dashboard:
 #	sudo k3s kubectl port-forward svc/kubernetes-dashboard  -n kubernetes-dashboard 8443:443 --address='0.0.0.0'
 
 gpu-operator:
-	sudo helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
-   	&& sudo helm repo update \
-	&& sudo helm upgrade --install --wait gpu-operator \
+	helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
+   	&& helm repo update \
+	&& helm upgrade --install --wait gpu-operator \
 		--namespace gpu-operator \
 		--create-namespace \
 		nvidia/gpu-operator \
@@ -81,47 +81,47 @@ gpu-operator:
 		--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 check-gpu-operator:
-	sudo kubectl get po -n gpu-operator
+	kubectl get po -n gpu-operator
 
 describe-nodes:
-	sudo kubectl describe nodes
+	kubectl describe nodes
 	#sudo kubectl describe nodes k3s-instance-1
 
 kubeflow:
 	git clone https://github.com/data-max-hq/manifests.git
 	cd manifests/
-	while ! kustomize build example | awk '!/well-defined/' | sudo kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+	while ! kustomize build example | awk '!/well-defined/' | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 check-kubeflow:
-	sudo kubectl get po -n kubeflow
+	kubectl get po -n kubeflow
 
 kubeflow-port:
-	sudo kubectl port-forward svc/istio-ingressgateway 8080:80 -n istio-system --address 0.0.0.0
+	kubectl port-forward svc/istio-ingressgateway 8080:80 -n istio-system --address 0.0.0.0
 
 kuberay:
-	sudo helm repo add kuberay https://ray-project.github.io/kuberay-helm/
-	sudo helm repo update
-	sudo helm upgrade --install \
-  	kuberay-operator kuberay/kuberay-operator \
-  	--namespace kuberay-operator \
-    --create-namespace \
-  	--version ${KUBERAY_VERSION} \
-  	--kubeconfig /etc/rancher/k3s/k3s.yaml
+	helm repo add kuberay https://ray-project.github.io/kuberay-helm/ \
+   	&& helm repo update \
+   	&& helm upgrade --install \
+	kuberay-operator kuberay/kuberay-operator \
+	--namespace kuberay-operator \
+	--create-namespace \
+	--version ${KUBERAY_VERSION} \
+	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
 check-kuberay:
-	sudo kubectl get pods -n kuberay-operator
+	kubectl get pods -n kuberay-operator
 
 raycluster:
 	#Create Ray cluster
-	sudo sh ray-cluster.sh
+	#sh ray-cluster.sh
 	#sudo kubectl apply -f k3s/ray-cluster.yaml
-	#sudo kubectl apply -f https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/k3s/ray-cluster.yaml
+	kubectl apply -f https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/k3s/ray-cluster.yaml
 
 check-raycluster:
-	sudo kubectl get pods -n kubeflow-user-example-com
+	kubectl get pods -n kubeflow-user-example-com
 
 raycluster-port:
-	sudo kubectl port-forward svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com --address 0.0.0.0
+	kubectl port-forward svc/example-cluster-head-svc 8265:8265 -n kubeflow-user-example-com --address 0.0.0.0
 
 uninstall:
 	/usr/local/bin/k3s-uninstall.sh
