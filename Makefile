@@ -31,7 +31,7 @@ k3s:
 	curl -sfL https://get.k3s.io | K3S_TOKEN=12345 INSTALL_K3S_VERSION=v1.25.8+k3s1 sh -
 
 su-kubectl:
-	sudo chown $USER /etc/rancher/k3s/k3s.yaml
+	sudo chown $$USER /etc/rancher/k3s/k3s.yaml
 
 get-k3s-node-token:
 	sudo cat /var/lib/rancher/k3s/server/node-token
