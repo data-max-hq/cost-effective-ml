@@ -95,7 +95,7 @@ gpu-operator:
 		--set toolkit.enabled=false \
 		--kubeconfig /etc/rancher/k3s/k3s.yaml
 
-check-gpu-operator:
+gpu-operator-check:
 	kubectl get po -n gpu-operator
 
 describe-nodes:
@@ -107,7 +107,7 @@ kubeflow:
 	&& cd manifests/ \
 	&& while ! kustomize build example | awk '!/well-defined/' | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
-check-kubeflow:
+kubeflow-check:
 	kubectl get po -n kubeflow
 
 kubeflow-port:
@@ -131,7 +131,7 @@ kuberay:
 	--version ${KUBERAY_VERSION} \
 	--kubeconfig /etc/rancher/k3s/k3s.yaml
 
-check-kuberay:
+kuberay-check:
 	kubectl get pods -n kuberay-operator
 
 raycluster:
@@ -140,7 +140,7 @@ raycluster:
 	#sudo kubectl apply -f k3s/ray-cluster.yaml
 	kubectl apply -f https://raw.githubusercontent.com/data-max-hq/cost-effective-ml/main/k3s/ray-cluster.yaml
 
-check-raycluster:
+raycluster-check:
 	kubectl get pods -n kubeflow-user-example-com
 
 raycluster-port:
