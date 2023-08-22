@@ -98,9 +98,9 @@ describe-nodes:
 	#sudo kubectl describe nodes k3s-instance-1
 
 kubeflow:
-	git clone https://github.com/data-max-hq/manifests.git
-	cd manifests/
-	while ! kustomize build example | awk '!/well-defined/' | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
+	git clone https://github.com/data-max-hq/manifests.git	\
+	&& cd manifests/ \
+	&& while ! kustomize build example | awk '!/well-defined/' | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 check-kubeflow:
 	kubectl get po -n kubeflow
