@@ -24,6 +24,16 @@ These tools must be installed in the nodes before starting:
 * Make
 * Nvidia Container Runtime
 
+### Versions tested in the demo
+* Kubernetes 1.25
+* Python 3.8
+* Ray 2.6
+* Kubeflow 1.7
+* Ubuntu 20.04
+* KubeRay 0.6.0
+* NVIDIA GPU Operator v23.6.0
+* Demo tested on Genesis Cloud with NVIDIA RTX3090 GPUs
+
 ## How to set up K3S master node
 
 ### Install prerequisites
