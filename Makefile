@@ -75,7 +75,7 @@ gpu-operator:
 #		--namespace gpu-operator \
 #		--create-namespace \
 #		nvidia/gpu-operator \
-#		--version 0.6.0 \
+#		--version v23.6.0 \
 #		--set driver.enabled=false \
 #		--set toolkit.enabled=false \
 #		--kubeconfig /etc/rancher/k3s/k3s.yaml
@@ -109,6 +109,14 @@ kubeflow-port:
 	kubectl port-forward svc/istio-ingressgateway 8080:80 -n istio-system --address 0.0.0.0
 
 kuberay:
+#	helm repo add kuberay https://ray-project.github.io/kuberay-helm/ \
+#	&& helm repo update \
+# 	&& helm upgrade --install \
+#	kuberay-operator kuberay/kuberay-operator \
+#	--namespace kuberay-operator \
+#	--create-namespace \
+#	--version 0.6.0 \
+#	--kubeconfig /etc/rancher/k3s/k3s.yaml
 	helm repo add kuberay https://ray-project.github.io/kuberay-helm/ \
    	&& helm repo update \
    	&& helm upgrade --install \
