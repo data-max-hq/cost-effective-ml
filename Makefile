@@ -69,8 +69,18 @@ dashboard:
 #	sudo k3s kubectl port-forward svc/kubernetes-dashboard  -n kubernetes-dashboard 8443:443 --address='0.0.0.0'
 
 gpu-operator:
+#	helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
+#	&& helm repo update \
+#	&& helm upgrade --install --wait gpu-operator \
+#		--namespace gpu-operator \
+#		--create-namespace \
+#		nvidia/gpu-operator \
+#		--version 0.6.0 \
+#		--set driver.enabled=false \
+#		--set toolkit.enabled=false \
+#		--kubeconfig /etc/rancher/k3s/k3s.yaml
 	helm repo add nvidia https://helm.ngc.nvidia.com/nvidia \
-   	&& helm repo update \
+	&& helm repo update \
 	&& helm upgrade --install --wait gpu-operator \
 		--namespace gpu-operator \
 		--create-namespace \
