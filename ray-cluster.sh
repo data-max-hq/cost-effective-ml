@@ -10,6 +10,7 @@ metadata:
   namespace: kubeflow-user-example-com
 spec:
   rayVersion: "2.6.1"
+  enableInTreeAutoscaling: true
   ######################headGroupSpec#################################
   # head group template and specs, (perhaps "group" is not needed in the name)
   headGroupSpec:
@@ -20,7 +21,6 @@ spec:
     replicas: 1
     # the following params are used to complete the ray start: ray start --head --block --dashboard-host: "0.0.0.0" ...
     rayStartParams:
-      num-gpus: "2"
       dashboard-host: "0.0.0.0"
       block: "true"
     #pod template
@@ -55,17 +55,15 @@ spec:
           resources:
             limits:
               nvidia.com/gpu: "1"
-              cpu: "1"
-              memory: "8G"
+              memory: "4G"
+              cpu: "1000m"
             requests:
               nvidia.com/gpu: "1"
-              cpu: "500m"
-              memory: "4G"
   workerGroupSpecs:
   # the pod replicas in this group typed worker
-  - replicas: 1
-    minReplicas: 1
+  - minReplicas: 1
     maxReplicas: 10
+    replicas: 1
     # logical group name, for this called large-group, also can be functional
     groupName: large-group
     # if worker pods need to be added, we can simply increment the replicas
@@ -107,12 +105,10 @@ spec:
           resources:
             limits:
               nvidia.com/gpu: "1"
-              cpu: "1"
-              memory: "8G"
+              memory: "2G"
+              cpu: "1000m"
             requests:
               nvidia.com/gpu: "1"
-              cpu: "500m"
-              memory: "4G"
         initContainers:
         # the env var $RAY_IP is set by the operator if missing, with the value of the head service name
         - name: init-myservice
