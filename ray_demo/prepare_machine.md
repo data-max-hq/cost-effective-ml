@@ -1,5 +1,6 @@
 # Prepare Machine
 ## Install before python
+```
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install gpg-agent git -y
@@ -13,6 +14,7 @@ sudo apt install python3.9-distutils python3.9 -y
 ## Install pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3.9 get-pip.py
+```
 
 ## Modify Path
 ```
