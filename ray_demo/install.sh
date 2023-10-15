@@ -27,7 +27,7 @@ pip install tensorboard
 pip install ipywidgets
 
 pip install jupyterlab
-jupyter lab
+jupyter lab --ip 0.0.0.0
 
 pip install notebook
 jupyter notebook --ip 0.0.0.0
@@ -42,4 +42,4 @@ mkdir ray
 cd ray
 vi mnist.py
 
-RAY_ADDRESS='http://192.168.11.161:8265' ray job submit --working-dir . -- python3.9 mnist.py
+RAY_ADDRESS='http://192.168.11.161:8265' ray job submit --working-dir . -- python3.9 mnist.py 2
