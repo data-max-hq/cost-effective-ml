@@ -8,3 +8,5 @@ tqdm
 pandas
 notebook
 jupyterlab
+tensorboard
+ipywidgets

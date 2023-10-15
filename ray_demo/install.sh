@@ -23,6 +23,8 @@ pip install torch torchvision torchaudio tqdm pandas
 pip install "ray[train]"
 pip install "ray[tune]"
 pip install notebook
+pip install tensorboard
+pip install ipywidgets
 
 pip install jupyterlab
 jupyter lab
