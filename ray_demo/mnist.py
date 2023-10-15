@@ -1,4 +1,6 @@
 import os
+import sys
+
 from filelock import FileLock
 from typing import Dict
 
@@ -145,5 +147,6 @@ def train_fashion_mnist(num_workers=2, use_gpu=False):
 
 
 if __name__ == "__main__":
-    train_fashion_mnist(num_workers=2, use_gpu=True)
-    # train_fashion_mnist(num_workers=4, use_gpu=True)
+    num_workers = int(sys.argv[1])
+    print(num_workers)
+    train_fashion_mnist(num_workers=num_workers, use_gpu=True)

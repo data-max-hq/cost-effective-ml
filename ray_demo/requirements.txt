@@ -1,0 +1,10 @@
+ray[default]
+ray[train]
+ray[tune]
+torch
+torchvision
+torchaudio
+tqdm
+pandas
+notebook
+jupyterlab

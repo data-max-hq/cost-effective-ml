@@ -22,11 +22,17 @@ pip install -U "ray[default]"
 pip install torch torchvision torchaudio tqdm pandas
 pip install "ray[train]"
 pip install "ray[tune]"
+pip install notebook
 
+pip install jupyterlab
+jupyter lab
+
+pip install notebook
+jupyter notebook --ip 0.0.0.0
 
 # Start ray cluster
 ray start --head --port=6379 --dashboard-host=0.0.0.0
-ray start --address=192.168.10.129:6379
+ray start --address=192.168.11.161:6379
 
 git clone https://github.com/data-max-hq/cost-effective-ml.git
 
@@ -34,4 +40,4 @@ mkdir ray
 cd ray
 vi mnist.py
 
-RAY_ADDRESS='http://192.168.10.129:8265' ray job submit --working-dir . -- python3.9 mnist.py
+RAY_ADDRESS='http://192.168.11.161:8265' ray job submit --working-dir . -- python3.9 mnist.py
