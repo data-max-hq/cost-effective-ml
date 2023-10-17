@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ```
 
 ## Ports
-* 8008 Jupyter Lab
+* 8888 Jupyter Lab
 * 8265 Ray UI
 * 6006 Tensorboard
 * 
