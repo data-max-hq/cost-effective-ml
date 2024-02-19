@@ -21,6 +21,11 @@ echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> ~/.bashrc
 source ~/.bashrc
 ```
 
+## Clone repo
+```
+git clone https://github.com/data-max-hq/cost-effective-ml.git
+```
+
 ## Install ray and dependencies
 ```
 pip install torch torchvision torchaudio tqdm pandas
@@ -41,4 +46,3 @@ pip install -r requirements.txt
 * 8888 Jupyter Lab
 * 8265 Ray UI
 * 6006 Tensorboard
-* 
