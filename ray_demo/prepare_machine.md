@@ -1,7 +1,7 @@
 # Prepare Machine
 ## Install before python
 ```
-sudo apt-get install gpg-agent git -y
+sudo apt-get install gpg-agent git zsh -y
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 
 sudo apt update
@@ -15,10 +15,28 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3.9 get-pip.py
 ```
 
+## Make `zsh` your default shell
+
+```
+chsh -s $(which zsh)
+```
+
+## Install `zsh-autocomplete`
+
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+```
+
 ## Modify Path
 ```
 echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> ~/.bashrc
 source ~/.bashrc
+```
+
+```
+echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> ~/.zshrc
+source ~/.zshrc
 ```
 
 ## Clone repo
