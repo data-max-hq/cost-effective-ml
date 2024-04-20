@@ -1,31 +1,46 @@
 # Prepare Machine
 ## Install before python
 ```
-sudo apt-get install gpg-agent git zsh -y
+sudo apt-get install gpg-agent git -y
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 
 sudo apt update
 sudo apt-get upgrade -y
+```
 
+## (Optional) Install `oh-my-zsh` and `zsh-autosuggestion`
+```
+# https://github.com/ohmyzsh/ohmyzsh?tab=readme-ov-file#basic-installation
+# https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
+sudo apt-get install zsh -y
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+### Add the plugin to the list of plugins for Oh My Zsh to load (inside ~/.zshrc):
+```bash
+plugins=( 
+    # other plugins...
+    zsh-autosuggestions
+)
+```
+
+```angular2html
+source ~/.zshrc
+```
 ## Install Python: https://www.linuxcapable.com/install-python-3-8-on-ubuntu-linux/
-sudo apt install python3.9-distutils python3.9 -y
+```
+sudo apt install python3-distutils python3.10 -y
 
 ## Install pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3.9 get-pip.py
+python3.10 get-pip.py
 ```
 
 ## Make `zsh` your default shell
 
 ```
 chsh -s $(which zsh)
-```
-
-## Install `zsh-autocomplete`
-
-```bash
-git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 ```
 
 ## Modify Path
