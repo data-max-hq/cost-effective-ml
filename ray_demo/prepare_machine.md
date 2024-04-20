@@ -25,12 +25,12 @@ plugins=(
 )
 ```
 
-```angular2html
+```
 source ~/.zshrc
 ```
 ## Install Python: https://www.linuxcapable.com/install-python-3-8-on-ubuntu-linux/
 ```
-sudo apt install python3-distutils python3.10 -y
+sudo apt install python3.10 python3-distutils -y
 
 ## Install pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
