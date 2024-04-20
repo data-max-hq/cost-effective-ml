@@ -25,6 +25,7 @@ plugins=(
 )
 ```
 
+### Source `zshrc`
 ```
 source ~/.zshrc
 ```
@@ -37,18 +38,12 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3.10 get-pip.py
 ```
 
-## Make `zsh` your default shell
-
-```
-chsh -s $(which zsh)
-```
-
 ## Modify Path
 ```
 echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> ~/.bashrc
 source ~/.bashrc
 ```
-
+or
 ```
 echo "export PATH=$PATH:/home/ubuntu/.local/bin" >> ~/.zshrc
 source ~/.zshrc
