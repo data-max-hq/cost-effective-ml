@@ -15,3 +15,6 @@ j:
 
 r:
 	ray start --head --port=6379 --dashboard-host=0.0.0.0 --disable-usage-stats
+
+terminal:
+	RAY_ADDRESS='http://192.168.10.65:8265' ray job submit --working-dir . -- python3.10 mnist.py 2
