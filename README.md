@@ -179,4 +179,4 @@ sh ray-cluster.sh
 * https://github.com/NVIDIA/gpu-operator
 
 
-Made with ❤️ by [data-max.io](https://www.data-max.io/).
+Made with ❤️ by [datamax.ai](https://www.datamax.ai/).
